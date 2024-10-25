@@ -9,6 +9,22 @@ Utility library providing companion tools, helpers and best practices for workin
 - More OSI utility features planned, feature requests and pull requests welcome!
 
 ## Build Instructions
+
+### Install required dependencies
+- Compiler (e.g. GCC, Clang, MSVC)
+- Python
+- [CMake](https://cmake.org/download/)
+- [zstd](https://github.com/facebook/zstd)
+- [lz4](https://github.com/lz4/lz4)
+- [Protobuf](https://github.com/protocolbuffers/protobuf)
+
+**Note:** On Debian/Ubuntu, you can install the required dependencies using the following commands:
+```bash
+sudo apt install build-essential cmake libzstd-dev liblz4-dev protobuf-compiler
+```
+
+### Build 
+
 Clone the repository
 ```bash
 git clone https://github.com/OpenSimulationInterface/osi-utilities.git
