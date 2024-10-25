@@ -1,0 +1,19 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - 'main'
+jobs:
+  check-spdx-headers:
+    name: SPDX License Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - uses: enarx/spdx@master
+        with:
+          licenses: Apache-2.0 BSD-3-Clause BSD-2-Clause MIT MPL-2.0
