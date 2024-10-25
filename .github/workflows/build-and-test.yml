@@ -40,7 +40,7 @@ jobs:
       - name: Build
         run: cmake --build ${{github.workspace}}/build -j3
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: ${{github.workspace}}/build
@@ -51,7 +51,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           path: ${{github.workspace}}/build
@@ -67,7 +67,7 @@ jobs:
       - name: Install gcovr
         run: sudo apt-get install -y gcovr
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           path: ${{github.workspace}}/build
