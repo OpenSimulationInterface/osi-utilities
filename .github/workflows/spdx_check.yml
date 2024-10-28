@@ -1,12 +1,7 @@
-name: Build and Test
+name: SPDX License Check
 
-on:
-  push:
-    branches:
-      - '*'
-  pull_request:
-    branches:
-      - 'main'
+on: [push, pull_request]
+
 jobs:
   check-spdx-headers:
     name: SPDX License Check

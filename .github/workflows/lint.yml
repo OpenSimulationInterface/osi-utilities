@@ -1,10 +1,7 @@
-name: Linting
+name: Lint
 
-on:
-  workflow_run:
-    workflows: ["Ubuntu"]
-    types:
-      - completed
+on: [push, pull_request]
+
 jobs:
   lint:
     runs-on: ubuntu-latest
