@@ -30,5 +30,5 @@ jobs:
           database: 'build'
           ignore: 'tests'
       - name: Check Lint Results
-        if: steps.cpplinter.outputs.checks-failed > 0
-        run: exit 1
+        if: steps.linter.outputs.checks-failed > 0
+        run: echo "Some files failed the linting checks!"

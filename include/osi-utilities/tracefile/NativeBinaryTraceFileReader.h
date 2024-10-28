@@ -8,6 +8,7 @@
 
 #include "Reader.h"
 #include <fstream>
+#include <functional>
 
 namespace osi3 {
 
