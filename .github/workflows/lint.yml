@@ -28,7 +28,7 @@ jobs:
           thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
           extra-args: -std=c++17
           database: 'build'
-          ignore: 'test'
+          ignore: 'tests'
       - name: Check Lint Results
         if: steps.cpplinter.outputs.checks-failed > 0
         run: exit 1
