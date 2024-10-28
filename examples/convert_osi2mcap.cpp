@@ -160,7 +160,18 @@ int main(const int argc, const char** argv) {
         return 1;
     }
 
-    const google::protobuf::Descriptor* descriptor = GetDescriptorForMessageType(tracefile_reader.GetMessageType());
+    const google::protobuf::Descriptor* descriptor = nullptr;
+    try {
+        descriptor = GetDescriptorForMessageType(tracefile_reader.GetMessageType());
+    } catch (const std::runtime_error& e) {
+        std::cerr << "ERROR: " << e.what() << std::endl;
+        return 1;
+    }
+    if (!descriptor) {
+        std::cerr << "ERROR: Failed to get message descriptor" << std::endl;
+        return 1;
+    }
+
     tracefile_writer.AddChannel("ConvertedTrace", descriptor);
 
 

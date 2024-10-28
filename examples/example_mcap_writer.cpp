@@ -27,7 +27,7 @@ int main(int argc, const char **argv) {
     // add a channel to store some data
     const std::string topic = "Sensor_1_Output";
     const std::unordered_map<std::string, std::string> channel_metadata = {{"description", "This channel contains the output of the sensor 1"}};
-    auto channel_id_sensor_1 = tracefile_writer.AddChannel(topic, osi3::SensorData::descriptor(), channel_metadata);
+    tracefile_writer.AddChannel(topic, osi3::SensorData::descriptor(), channel_metadata);
 
 
     // create OSI data to store
@@ -37,10 +37,10 @@ int main(int argc, const char **argv) {
     sensor_view_1.mutable_version()->CopyFrom(osi_version);
     sensor_view_1.mutable_sensor_id()->set_value(0);
 
-    auto ground_truth_1 = sensor_view_1.mutable_global_ground_truth();
+    auto *const ground_truth_1 = sensor_view_1.mutable_global_ground_truth();
     ground_truth_1->mutable_version()->CopyFrom(osi_version);
 
-    auto host_vehicle = ground_truth_1->mutable_moving_object()->Add();
+    auto *const host_vehicle = ground_truth_1->mutable_moving_object()->Add();
     host_vehicle->mutable_id()->set_value(12);
     host_vehicle->mutable_vehicle_classification()->set_type(osi3::MovingObject_VehicleClassification_Type_TYPE_SMALL_CAR);
     host_vehicle->mutable_base()->mutable_dimension()->set_length(5);

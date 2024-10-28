@@ -15,8 +15,12 @@ else()
     include_directories(${OSI_INCLUDE_DIR})
 endif()
 
-
 # Link each example against the library
 target_link_libraries(example_mcap_writer PRIVATE OSIUtilities)
 target_link_libraries(example_native_binary_reader PRIVATE OSIUtilities)
 target_link_libraries(convert_osi2mcap PRIVATE OSIUtilities)
+
+# Specify the public headers for the library for clean access
+target_include_directories(example_mcap_writer PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(example_native_binary_reader PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(convert_osi2mcap PUBLIC ${PROJECT_SOURCE_DIR}/include)

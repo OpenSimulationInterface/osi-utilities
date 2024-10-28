@@ -9,8 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Generate compile_commands.json for clang based tools
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-
-
 # Add the include folder for public headers
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
@@ -60,8 +58,6 @@ if(DOXYGEN_FOUND AND PROJECT_IS_TOP_LEVEL)
             VERBATIM
     )
 endif(DOXYGEN_FOUND AND PROJECT_IS_TOP_LEVEL)
-
-
 
 add_subdirectory(src)
 if(PROJECT_IS_TOP_LEVEL)
