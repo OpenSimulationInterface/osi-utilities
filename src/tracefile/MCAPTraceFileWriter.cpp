@@ -25,21 +25,20 @@ namespace
 // Recursively adds all `fd` dependencies to `fd_set`.
 void fdSetInternal(google::protobuf::FileDescriptorSet& fd_set,
                    std::unordered_set<std::string>& files,
-                   const google::protobuf::FileDescriptor* fd) {
-    for (int i = 0; i < fd->dependency_count(); ++i) {
-        const auto* dep = fd->dependency(i);
-        auto [_, inserted] = files.insert(dep->name());
-        if (!inserted) continue;
-        fdSetInternal(fd_set, files, fd->dependency(i));
+                   const google::protobuf::FileDescriptor* file_descriptor) {
+    for (int i = 0; i < file_descriptor->dependency_count(); ++i) {
+        const auto* dep = file_descriptor->dependency(i);
+        if (auto [_, inserted] = files.insert(dep->name()); !inserted) { continue; }
+        fdSetInternal(fd_set, files, file_descriptor->dependency(i));
     }
-    fd->CopyTo(fd_set.add_file());
+    file_descriptor->CopyTo(fd_set.add_file());
 }
 // Returns a serialized google::protobuf::FileDescriptorSet containing
 // the necessary google::protobuf::FileDescriptor's to describe d.
-std::string fdSet(const google::protobuf::Descriptor* d) {
+std::string fdSet(const google::protobuf::Descriptor* descriptor) {
     std::unordered_set<std::string> files;
     google::protobuf::FileDescriptorSet fd_set;
-    fdSetInternal(fd_set, files, d->file());
+    fdSetInternal(fd_set, files, descriptor->file());
     return fd_set.SerializeAsString();
 }
 
@@ -143,7 +142,7 @@ uint16_t MCAPTraceFileWriter::AddChannel(const std::string& topic, const google:
     // Check if the schema for this descriptor's full name already exists
     mcap::Schema path_schema;
     const auto it_schema = std::find_if(schemas_.begin(), schemas_.end(),
-                           [&](const mcap::Schema& s) { return s.name == descriptor->full_name(); });
+                           [&](const mcap::Schema& schema) { return schema.name == descriptor->full_name(); });
 
     // Check if topic already exists
     if (topic_to_channel_id_.find(topic) != topic_to_channel_id_.end()) {
