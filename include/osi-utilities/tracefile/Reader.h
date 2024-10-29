@@ -32,6 +32,23 @@ enum class ReaderTopLevelMessage : u_int8_t
 };
 
 /**
+* @brief Map of trace file names to their corresponding message type
+*/
+const std::unordered_map<std::string, osi3::ReaderTopLevelMessage> kMessageTypeMap = {
+ {"_gt_", osi3::ReaderTopLevelMessage::kGroundTruth},
+ {"_sd_", osi3::ReaderTopLevelMessage::kSensorData},
+ {"_sv_", osi3::ReaderTopLevelMessage::kSensorView},
+ {"_svc_", osi3::ReaderTopLevelMessage::kSensorViewConfiguration},
+ {"_hvd_", osi3::ReaderTopLevelMessage::kHostVehicleData},
+ {"_tc_", osi3::ReaderTopLevelMessage::kTrafficCommand},
+ {"_tcu_", osi3::ReaderTopLevelMessage::kTrafficCommandUpdate},
+ {"_tu_", osi3::ReaderTopLevelMessage::kTrafficUpdate},
+ {"_mr_", osi3::ReaderTopLevelMessage::kMotionRequest},
+ {"_su_", osi3::ReaderTopLevelMessage::kStreamingUpdate}
+};
+
+
+/**
  * @brief Structure containing the result of a read operation
  */
 struct ReadResult {

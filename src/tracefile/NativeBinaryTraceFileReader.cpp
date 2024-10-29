@@ -28,19 +28,6 @@ std::unique_ptr<google::protobuf::Message> ParseMessage(const std::vector<char>&
     return std::move(msg);
 }
 
-const std::unordered_map<std::string, osi3::ReaderTopLevelMessage> kMessageTypeMap = {
-    {"_gt_", osi3::ReaderTopLevelMessage::kGroundTruth},
-    {"_sd_", osi3::ReaderTopLevelMessage::kSensorData},
-    {"_sv_", osi3::ReaderTopLevelMessage::kSensorView},
-    {"_svc_", osi3::ReaderTopLevelMessage::kSensorViewConfiguration},
-    {"_hvd_", osi3::ReaderTopLevelMessage::kHostVehicleData},
-    {"_tc_", osi3::ReaderTopLevelMessage::kTrafficCommand},
-    {"_tcu_", osi3::ReaderTopLevelMessage::kTrafficCommandUpdate},
-    {"_tu_", osi3::ReaderTopLevelMessage::kTrafficUpdate},
-    {"_mr_", osi3::ReaderTopLevelMessage::kMotionRequest},
-    {"_su_", osi3::ReaderTopLevelMessage::kStreamingUpdate}
-};
-
 const std::unordered_map<osi3::ReaderTopLevelMessage, osi3::MessageParserFunc> kParserMap = {
     {osi3::ReaderTopLevelMessage::kGroundTruth, [](const std::vector<char>& data) { return ParseMessage<osi3::GroundTruth>(data); }},
     {osi3::ReaderTopLevelMessage::kSensorData, [](const std::vector<char>& data) { return ParseMessage<osi3::SensorData>(data); }},
@@ -53,7 +40,6 @@ const std::unordered_map<osi3::ReaderTopLevelMessage, osi3::MessageParserFunc> k
     {osi3::ReaderTopLevelMessage::kMotionRequest, [](const std::vector<char>& data) { return ParseMessage<osi3::MotionRequest>(data); }},
     {osi3::ReaderTopLevelMessage::kStreamingUpdate, [](const std::vector<char>& data) { return ParseMessage<osi3::StreamingUpdate>(data); }}
 };
-
 
 } // unnamed namespace
 
@@ -97,14 +83,6 @@ bool NativeBinaryTraceFileReader::Open(const std::string& filename) {
 
     parser_ = kParserMap.at(message_type_);
 
-    // if no parser/type was found, return false
-    if (!parser_) {
-        std::cerr << "ERROR: Unable to determine message type from the filename '" << filename
-                  << "'. Please ensure the filename follows the recommended OSI naming conventions as specified in the documentation."
-                  << std::endl;
-        return false;
-    }
-
     trace_file_ = std::ifstream(filename, std::ios::binary);
     if (!trace_file_) {
         std::cerr << "ERROR: Failed to open trace file: " << filename << std::endl;
@@ -134,10 +112,9 @@ std::optional<ReadResult> NativeBinaryTraceFileReader::ReadMessage() {
     }
 
 
-    std::optional<ReadResult> result;
-    result.emplace();
-    result->message = parser_(serialized_msg);
-    result->message_type = message_type_;
+    ReadResult result;
+    result.message = parser_(serialized_msg);
+    result.message_type = message_type_;
 
     return result;
 }

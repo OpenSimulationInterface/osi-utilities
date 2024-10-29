@@ -53,3 +53,8 @@ cmake-build-*/
 
 # Local build tool output
 local_build_tools/*.html
+
+# trace file
+*.osi
+*.txth
+*.mcap

@@ -11,6 +11,7 @@ set(OSIUtilities_SRCS
         tracefile/MCAPTraceFileWriter.cpp
         tracefile/Reader.cpp
         tracefile/NativeBinaryTraceFileReader.cpp
+        tracefile/TextTraceFileReader.cpp
 
 )
 

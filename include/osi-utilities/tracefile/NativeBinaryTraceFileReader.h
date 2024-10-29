@@ -12,11 +12,11 @@
 
 namespace osi3 {
 
-
 /**
- * @brief Function type for parsing binary messages into protobuf objects
+ * @brief Function type for parsing binary buffers (as char vector) into protobuf objects
  */
 using MessageParserFunc = std::function<std::unique_ptr<google::protobuf::Message>(const std::vector<char>&)>;
+
 
 /**
  * @brief Reader implementation for native binary OSI trace files
@@ -45,7 +45,7 @@ class NativeBinaryTraceFileReader final : public osi3::TraceFileReader {
 private:
     std::ifstream trace_file_;                         /**< File stream for reading */
     MessageParserFunc parser_;                         /**< Message parsing function */
-    ReaderTopLevelMessage message_type_ = ReaderTopLevelMessage::kUnknown;  /**< Current message type */
+ ReaderTopLevelMessage message_type_{ReaderTopLevelMessage::kUnknown};  /**< Current message type */
 
     /**
      * @brief Reads raw binary message data from file
