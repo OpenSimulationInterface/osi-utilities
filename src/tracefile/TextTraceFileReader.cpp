@@ -4,48 +4,12 @@
 //
 
 #include "osi-utilities/tracefile/TextTraceFileReader.h"
-#include "google/protobuf/descriptor.pb.h"
 #include "google/protobuf/text_format.h"
 #include <sstream>
 #include <filesystem>
 
-#include "osi_groundtruth.pb.h"
-#include "osi_sensordata.pb.h"
-#include "osi_sensorview.pb.h"
-#include "osi_sensorviewconfiguration.pb.h"
-#include "osi_hostvehicledata.pb.h"
-#include "osi_trafficcommand.pb.h"
-#include "osi_trafficcommandupdate.pb.h"
-#include "osi_trafficupdate.pb.h"
-#include "osi_motionrequest.pb.h"
-#include "osi_streamingupdate.pb.h"
 
 namespace osi3 {
-namespace {
-template<typename T>
-std::unique_ptr<google::protobuf::Message> ParseMessage(const std::string& data) {
-    auto msg = std::make_unique<T>();
-    const auto res = google::protobuf::TextFormat::ParseFromString(data, msg.get());
-    if (!res) {
-        throw std::runtime_error("Failed to parse message");
-    }
-    return std::move(msg);
-}
-
-const std::unordered_map<osi3::ReaderTopLevelMessage, osi3::MessageParserFunc> kParserMap = {
-    {osi3::ReaderTopLevelMessage::kGroundTruth, [](const std::string& data) { return ParseMessage<osi3::GroundTruth>(data); }},
-    {osi3::ReaderTopLevelMessage::kSensorData, [](const std::string& data) { return ParseMessage<osi3::SensorData>(data); }},
-    {osi3::ReaderTopLevelMessage::kSensorView, [](const std::string& data) { return ParseMessage<osi3::SensorView>(data); }},
-    {osi3::ReaderTopLevelMessage::kSensorViewConfiguration, [](const std::string& data) { return ParseMessage<osi3::SensorViewConfiguration>(data); }},
-    {osi3::ReaderTopLevelMessage::kHostVehicleData, [](const std::string& data) { return ParseMessage<osi3::HostVehicleData>(data); }},
-    {osi3::ReaderTopLevelMessage::kTrafficCommand, [](const std::string& data) { return ParseMessage<osi3::TrafficCommand>(data); }},
-    {osi3::ReaderTopLevelMessage::kTrafficCommandUpdate, [](const std::string& data) { return ParseMessage<osi3::TrafficCommandUpdate>(data); }},
-    {osi3::ReaderTopLevelMessage::kTrafficUpdate, [](const std::string& data) { return ParseMessage<osi3::TrafficUpdate>(data); }},
-    {osi3::ReaderTopLevelMessage::kMotionRequest, [](const std::string& data) { return ParseMessage<osi3::MotionRequest>(data); }},
-    {osi3::ReaderTopLevelMessage::kStreamingUpdate, [](const std::string& data) { return ParseMessage<osi3::StreamingUpdate>(data); }}
-};
-
-} // unnamed namespace
 
 
 bool TextTraceFileReader::Open(const std::string& filename) {
@@ -73,7 +37,7 @@ bool TextTraceFileReader::Open(const std::string& filename) {
         return false;
     }
 
-    parser_ = kParserMap.at(message_type_);
+    parser_ = kParserMap_.at(message_type_);
 
     trace_file_ = std::ifstream(filename);
 

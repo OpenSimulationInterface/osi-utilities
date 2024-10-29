@@ -8,40 +8,6 @@
 #include <sstream>
 #include <filesystem>
 
-#include "osi_groundtruth.pb.h"
-#include "osi_sensordata.pb.h"
-#include "osi_sensorview.pb.h"
-#include "osi_sensorviewconfiguration.pb.h"
-#include "osi_hostvehicledata.pb.h"
-#include "osi_trafficcommand.pb.h"
-#include "osi_trafficcommandupdate.pb.h"
-#include "osi_trafficupdate.pb.h"
-#include "osi_motionrequest.pb.h"
-#include "osi_streamingupdate.pb.h"
-
-
-namespace {
-template<typename T>
-std::unique_ptr<google::protobuf::Message> ParseMessage(const std::vector<char>& data) {
-    auto msg = std::make_unique<T>();
-    msg->ParseFromArray(data.data(), static_cast<int>(data.size()));
-    return std::move(msg);
-}
-
-const std::unordered_map<osi3::ReaderTopLevelMessage, osi3::MessageParserFunc> kParserMap = {
-    {osi3::ReaderTopLevelMessage::kGroundTruth, [](const std::vector<char>& data) { return ParseMessage<osi3::GroundTruth>(data); }},
-    {osi3::ReaderTopLevelMessage::kSensorData, [](const std::vector<char>& data) { return ParseMessage<osi3::SensorData>(data); }},
-    {osi3::ReaderTopLevelMessage::kSensorView, [](const std::vector<char>& data) { return ParseMessage<osi3::SensorView>(data); }},
-    {osi3::ReaderTopLevelMessage::kSensorViewConfiguration, [](const std::vector<char>& data) { return ParseMessage<osi3::SensorViewConfiguration>(data); }},
-    {osi3::ReaderTopLevelMessage::kHostVehicleData, [](const std::vector<char>& data) { return ParseMessage<osi3::HostVehicleData>(data); }},
-    {osi3::ReaderTopLevelMessage::kTrafficCommand, [](const std::vector<char>& data) { return ParseMessage<osi3::TrafficCommand>(data); }},
-    {osi3::ReaderTopLevelMessage::kTrafficCommandUpdate, [](const std::vector<char>& data) { return ParseMessage<osi3::TrafficCommandUpdate>(data); }},
-    {osi3::ReaderTopLevelMessage::kTrafficUpdate, [](const std::vector<char>& data) { return ParseMessage<osi3::TrafficUpdate>(data); }},
-    {osi3::ReaderTopLevelMessage::kMotionRequest, [](const std::vector<char>& data) { return ParseMessage<osi3::MotionRequest>(data); }},
-    {osi3::ReaderTopLevelMessage::kStreamingUpdate, [](const std::vector<char>& data) { return ParseMessage<osi3::StreamingUpdate>(data); }}
-};
-
-} // unnamed namespace
 
 namespace osi3 {
 

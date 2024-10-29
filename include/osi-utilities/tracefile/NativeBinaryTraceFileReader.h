@@ -10,6 +10,18 @@
 #include <fstream>
 #include <functional>
 
+#include "osi_groundtruth.pb.h"
+#include "osi_sensordata.pb.h"
+#include "osi_sensorview.pb.h"
+#include "osi_sensorviewconfiguration.pb.h"
+#include "osi_hostvehicledata.pb.h"
+#include "osi_trafficcommand.pb.h"
+#include "osi_trafficcommandupdate.pb.h"
+#include "osi_trafficupdate.pb.h"
+#include "osi_motionrequest.pb.h"
+#include "osi_streamingupdate.pb.h"
+
+
 namespace osi3 {
 
 /**
@@ -52,6 +64,32 @@ private:
      * @return Vector containing the raw message bytes
      */
     std::vector<char> ReadNextMessageFromFile();
+
+ template<typename T>
+ std::unique_ptr<google::protobuf::Message> ParseMessage(const std::string& data) {
+  auto msg = std::make_unique<T>();
+  if (!msg->ParseFromArray(data.data(), static_cast<int>(data.size()))) {
+   throw std::runtime_error("Failed to parse message");
+  }
+  return std::move(msg);
+ }
+
+ template<typename T>
+ MessageParserFunc CreateParser() {
+  return [this](const std::vector<char>& data) { return ParseMessage<T>(data); };
+ }
+ const std::unordered_map<ReaderTopLevelMessage, MessageParserFunc> kParserMap_ = {
+  {ReaderTopLevelMessage::kGroundTruth, CreateParser<GroundTruth>()},
+  {ReaderTopLevelMessage::kSensorData, CreateParser<SensorData>()},
+  {ReaderTopLevelMessage::kSensorView, CreateParser<SensorView>()},
+  {ReaderTopLevelMessage::kSensorViewConfiguration, CreateParser<SensorViewConfiguration>()},
+  {ReaderTopLevelMessage::kHostVehicleData, CreateParser<HostVehicleData>()},
+  {ReaderTopLevelMessage::kTrafficCommand, CreateParser<TrafficCommand>()},
+  {ReaderTopLevelMessage::kTrafficCommandUpdate, CreateParser<TrafficCommandUpdate>()},
+  {ReaderTopLevelMessage::kTrafficUpdate, CreateParser<TrafficUpdate>()},
+  {ReaderTopLevelMessage::kMotionRequest, CreateParser<MotionRequest>()},
+  {ReaderTopLevelMessage::kStreamingUpdate, CreateParser<StreamingUpdate>()}
+ };
 };
 
 
