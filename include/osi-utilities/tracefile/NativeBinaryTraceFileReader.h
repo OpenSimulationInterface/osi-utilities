@@ -63,7 +63,7 @@ class NativeBinaryTraceFileReader final : public osi3::TraceFileReader {
     std::vector<char> ReadNextMessageFromFile();
 
     template <typename T>
-    std::unique_ptr<google::protobuf::Message> ParseMessage(const std::string& data) {
+    std::unique_ptr<google::protobuf::Message> ParseMessage(const std::vector<char>& data) {
         auto msg = std::make_unique<T>();
         if (!msg->ParseFromArray(data.data(), static_cast<int>(data.size()))) {
             throw std::runtime_error("Failed to parse message");

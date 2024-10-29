@@ -8,8 +8,6 @@
 #include <filesystem>
 #include <sstream>
 
-#include "google/protobuf/descriptor.pb.h"
-
 namespace osi3 {
 
 bool NativeBinaryTraceFileReader::Open(const std::string& filename, const ReaderTopLevelMessage message_type) {
@@ -47,7 +45,7 @@ bool NativeBinaryTraceFileReader::Open(const std::string& filename) {
         return false;
     }
 
-    parser_ = kParserMap.at(message_type_);
+    parser_ = kParserMap_.at(message_type_);
 
     trace_file_ = std::ifstream(filename, std::ios::binary);
     if (!trace_file_) {
