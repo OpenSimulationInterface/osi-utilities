@@ -6,10 +6,11 @@
 #ifndef OSIUTILITIES_TRACEFILE_MCAPWRITER_H_
 #define OSIUTILITIES_TRACEFILE_MCAPWRITER_H
 
-#include "Writer.h"
 #include <mcap/mcap.hpp>
-namespace osi3 {
 
+#include "Writer.h"
+
+namespace osi3 {
 /**
  * @brief MCAP format implementation of the trace file writer
  *
@@ -17,10 +18,11 @@ namespace osi3 {
  * channels, schemas, and metadata.
  */
 class MCAPTraceFileWriter final : public osi3::TraceFileWriter {
-public:
+   public:
     bool Open(const std::string& filename) override;
 
-    template <typename T> bool WriteMessage(T top_level_message, const std::string& topic = "");
+    template <typename T>
+    bool WriteMessage(T top_level_message, const std::string& topic = "");
     bool SetMetadata(const std::string& name, const std::unordered_map<std::string, std::string>& metadata_entries) override;
 
     /**
@@ -33,12 +35,13 @@ public:
     uint16_t AddChannel(const std::string& topic, const google::protobuf::Descriptor* descriptor, std::unordered_map<std::string, std::string> channel_metadata = {});
 
     void Close() override;
-private:
-    mcap::McapWriter mcap_writer_;                              /**< MCAP writer instance */
-    mcap::McapWriterOptions mcap_options_{"protobuf"};     /**< MCAP writer configuration */
-    bool file_open_ = false;                                    /**< File open state */
-    std::vector<mcap::Schema> schemas_;                         /**< Registrated schemas */
-    std::map<std::string, uint16_t> topic_to_channel_id_;       /**< Topic to channel ID mapping */
+
+   private:
+    mcap::McapWriter mcap_writer_;                        /**< MCAP writer instance */
+    mcap::McapWriterOptions mcap_options_{"protobuf"};    /**< MCAP writer configuration */
+    bool file_open_ = false;                              /**< File open state */
+    std::vector<mcap::Schema> schemas_;                   /**< Registrated schemas */
+    std::map<std::string, uint16_t> topic_to_channel_id_; /**< Topic to channel ID mapping */
 
     /**
      * @brief Adds standard metadata to the MCAP file
@@ -47,8 +50,5 @@ private:
      */
     void AddCommonMetadata();
 };
-
-
-
-} // namespace osi3
-#endif // OSIUTILITIES_TRACEFILE_MCAPWRITER_H_
+}  // namespace osi3
+#endif  // OSIUTILITIES_TRACEFILE_MCAPWRITER_H_

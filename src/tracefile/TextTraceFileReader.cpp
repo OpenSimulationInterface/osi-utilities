@@ -4,13 +4,13 @@
 //
 
 #include "osi-utilities/tracefile/TextTraceFileReader.h"
-#include "google/protobuf/text_format.h"
-#include <sstream>
-#include <filesystem>
 
+#include <filesystem>
+#include <sstream>
+
+#include "google/protobuf/text_format.h"
 
 namespace osi3 {
-
 
 bool TextTraceFileReader::Open(const std::string& filename) {
     if (filename.find(".txth") == std::string::npos) {
@@ -54,13 +54,9 @@ bool TextTraceFileReader::Open(const std::string& filename, const ReaderTopLevel
     return Open(filename);
 }
 
-void TextTraceFileReader::Close() {
-    trace_file_.close();
-}
+void TextTraceFileReader::Close() { trace_file_.close(); }
 
-bool TextTraceFileReader::HasNext() {
-    return trace_file_ && !trace_file_.eof();
-}
+bool TextTraceFileReader::HasNext() { return trace_file_ && !trace_file_.eof(); }
 
 std::optional<ReadResult> TextTraceFileReader::ReadMessage() {
     if (!trace_file_) {
@@ -98,12 +94,11 @@ std::string TextTraceFileReader::ReadNextMessageFromFile() {
         // read next line
         std::getline(trace_file_, line);
     }
-    if (!trace_file_.eof()) { // go back to the line before line_indicating_msg_start_
-        trace_file_.seekg(last_position ,std::ios_base::beg);
+    if (!trace_file_.eof()) {  // go back to the line before line_indicating_msg_start_
+        trace_file_.seekg(last_position, std::ios_base::beg);
     }
 
     return message;
 }
 
-
-}
+}  // namespace osi3

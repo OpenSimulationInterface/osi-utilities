@@ -4,35 +4,34 @@
 //
 
 #include "osi-utilities/tracefile/MCAPTraceFileWriter.h"
-#include "google/protobuf/descriptor.pb.h"
 
+#include "google/protobuf/descriptor.pb.h"
 #include "osi_groundtruth.pb.h"
+#include "osi_hostvehicledata.pb.h"
+#include "osi_motionrequest.pb.h"
 #include "osi_sensordata.pb.h"
 #include "osi_sensorview.pb.h"
-#include "osi_hostvehicledata.pb.h"
+#include "osi_streamingupdate.pb.h"
 #include "osi_trafficcommand.pb.h"
 #include "osi_trafficcommandupdate.pb.h"
 #include "osi_trafficupdate.pb.h"
-#include "osi_motionrequest.pb.h"
-#include "osi_streamingupdate.pb.h"
 #include "osi_version.pb.h"
 
-
-namespace
-{
+namespace {
 // helper functions from https://github.com/foxglove/mcap/blob/4ec37c5a5d0115bceaca428b1e8a0e3e5aae20cf/website/docs/guides/cpp/protobuf.md?plain=1#L198
 // TODO: might want to change to the approach used here https://github.com/foxglove/mcap/blob/main/cpp/examples/protobuf/writer.cpp
 // Recursively adds all `fd` dependencies to `fd_set`.
-void fdSetInternal(google::protobuf::FileDescriptorSet& fd_set,
-                   std::unordered_set<std::string>& files,
-                   const google::protobuf::FileDescriptor* file_descriptor) {
+void fdSetInternal(google::protobuf::FileDescriptorSet& fd_set, std::unordered_set<std::string>& files, const google::protobuf::FileDescriptor* file_descriptor) {
     for (int i = 0; i < file_descriptor->dependency_count(); ++i) {
         const auto* dep = file_descriptor->dependency(i);
-        if (auto [_, inserted] = files.insert(dep->name()); !inserted) { continue; }
+        if (auto [_, inserted] = files.insert(dep->name()); !inserted) {
+            continue;
+        }
         fdSetInternal(fd_set, files, file_descriptor->dependency(i));
     }
     file_descriptor->CopyTo(fd_set.add_file());
 }
+
 // Returns a serialized google::protobuf::FileDescriptorSet containing
 // the necessary google::protobuf::FileDescriptor's to describe d.
 std::string fdSet(const google::protobuf::Descriptor* descriptor) {
@@ -53,7 +52,7 @@ std::string GetCurrentTimeString() {
     return oss.str();
 }
 
-} // namespace
+}  // namespace
 
 namespace osi3 {
 bool MCAPTraceFileWriter::Open(const std::string& filename) {
@@ -88,16 +87,15 @@ bool MCAPTraceFileWriter::WriteMessage(T top_level_message, const std::string& t
     msg.channelId = topic_channel_id->second;
 
     // msg.logTime should be now in nanoseconds
-    msg.logTime = top_level_message.timestamp().seconds()*1000000000 + top_level_message.timestamp().nanos();
+    msg.logTime = top_level_message.timestamp().seconds() * 1000000000 + top_level_message.timestamp().nanos();
     msg.publishTime = msg.logTime;
     msg.data = reinterpret_cast<const std::byte*>(data.data());
     msg.dataSize = data.size();
-    if (auto const status = mcap_writer_.write(msg); status.code != mcap::StatusCode::Success)
-    {
-        std::cerr <<"Error: Failed to write message " << status.message;
+    if (const auto status = mcap_writer_.write(msg); status.code != mcap::StatusCode::Success) {
+        std::cerr << "Error: Failed to write message " << status.message;
         return false;
     }
-    std::cout << "Wrote message with timestamp: " << msg.logTime << std::endl; // todo remove debug print
+    std::cout << "Wrote message with timestamp: " << msg.logTime << std::endl;  // todo remove debug print
     return true;
 }
 
@@ -106,43 +104,39 @@ bool MCAPTraceFileWriter::SetMetadata(const std::string& name, const std::unorde
     metadata.name = name;
     metadata.metadata = metadata_entries;
 
-    if (auto const status = mcap_writer_.write(metadata); status.code != mcap::StatusCode::Success)
-    {
-        std::cerr <<"Error: Failed to write metadata with name " << name << "\n"  << status.message;
+    if (const auto status = mcap_writer_.write(metadata); status.code != mcap::StatusCode::Success) {
+        std::cerr << "Error: Failed to write metadata with name " << name << "\n" << status.message;
         return false;
     }
     return true;
 }
 
 void MCAPTraceFileWriter::Close() {
-    file_open_= false;
+    file_open_ = false;
     mcap_writer_.close();
 }
 
-void MCAPTraceFileWriter::AddCommonMetadata()
-{
-    mcap::Metadata metadata_versions {"versions"};
+void MCAPTraceFileWriter::AddCommonMetadata() {
+    mcap::Metadata metadata_versions{"versions"};
     const auto osi_version = osi3::InterfaceVersion::descriptor()->file()->options().GetExtension(osi3::current_interface_version);
-    metadata_versions.metadata["osi"] = std::to_string(osi_version.version_major())+"."+std::to_string(osi_version.version_minor())+"."+std::to_string(osi_version.version_patch());
+    metadata_versions.metadata["osi"] =
+        std::to_string(osi_version.version_major()) + "." + std::to_string(osi_version.version_minor()) + "." + std::to_string(osi_version.version_patch());
 
-    mcap::Metadata metadata_creation {"creation_date"};
+    mcap::Metadata metadata_creation{"creation_date"};
     metadata_creation.metadata["timestamp"] = GetCurrentTimeString();
 
-    if (auto const status = mcap_writer_.write(metadata_versions); status.code != mcap::StatusCode::Success)
-    {
-        throw std::runtime_error("Error: Failed to write metadata versions. "+ status.message);
+    if (const auto status = mcap_writer_.write(metadata_versions); status.code != mcap::StatusCode::Success) {
+        throw std::runtime_error("Error: Failed to write metadata versions. " + status.message);
     }
-    if (auto const status = mcap_writer_.write(metadata_creation); status.code != mcap::StatusCode::Success)
-    {
-        throw std::runtime_error("Error: Failed to write metadata creation date. "+ status.message);
+    if (const auto status = mcap_writer_.write(metadata_creation); status.code != mcap::StatusCode::Success) {
+        throw std::runtime_error("Error: Failed to write metadata creation date. " + status.message);
     }
 }
 
 uint16_t MCAPTraceFileWriter::AddChannel(const std::string& topic, const google::protobuf::Descriptor* descriptor, std::unordered_map<std::string, std::string> channel_metadata) {
     // Check if the schema for this descriptor's full name already exists
     mcap::Schema path_schema;
-    const auto it_schema = std::find_if(schemas_.begin(), schemas_.end(),
-                           [&](const mcap::Schema& schema) { return schema.name == descriptor->full_name(); });
+    const auto it_schema = std::find_if(schemas_.begin(), schemas_.end(), [&](const mcap::Schema& schema) { return schema.name == descriptor->full_name(); });
 
     // Check if topic already exists
     if (topic_to_channel_id_.find(topic) != topic_to_channel_id_.end()) {
@@ -167,9 +161,9 @@ uint16_t MCAPTraceFileWriter::AddChannel(const std::string& topic, const google:
 
     // add osi version to channel metadata as required by spec.
     const auto osi_version = osi3::InterfaceVersion::descriptor()->file()->options().GetExtension(osi3::current_interface_version);
-    channel_metadata["osi_version"] = std::to_string(osi_version.version_major())+"."+std::to_string(osi_version.version_minor())+"."+std::to_string(osi_version.version_patch());
-    channel_metadata["protobuf_version"] = "4.30.0"; // todo add real protobuf version
-
+    channel_metadata["osi_version"] =
+        std::to_string(osi_version.version_major()) + "." + std::to_string(osi_version.version_minor()) + "." + std::to_string(osi_version.version_patch());
+    channel_metadata["protobuf_version"] = "4.30.0";  // todo add real protobuf version
 
     // add the channel to the writer/mcap file
     mcap::Channel channel(topic, "protobuf", path_schema.id, channel_metadata);
@@ -181,7 +175,6 @@ uint16_t MCAPTraceFileWriter::AddChannel(const std::string& topic, const google:
     return channel.id;
 }
 
-
 // template instantiations of allowed OSI top-level messages
 template bool MCAPTraceFileWriter::WriteMessage<osi3::GroundTruth>(osi3::GroundTruth, const std::string&);
 template bool MCAPTraceFileWriter::WriteMessage<osi3::SensorData>(osi3::SensorData, const std::string&);
@@ -192,4 +185,4 @@ template bool MCAPTraceFileWriter::WriteMessage<osi3::TrafficCommandUpdate>(osi3
 template bool MCAPTraceFileWriter::WriteMessage<osi3::TrafficUpdate>(osi3::TrafficUpdate, const std::string&);
 template bool MCAPTraceFileWriter::WriteMessage<osi3::MotionRequest>(osi3::MotionRequest, const std::string&);
 template bool MCAPTraceFileWriter::WriteMessage<osi3::StreamingUpdate>(osi3::StreamingUpdate, const std::string&);
-} // osi3
+}  // namespace osi3

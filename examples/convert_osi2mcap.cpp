@@ -3,21 +3,20 @@
 // SPDX-License-Identifier: MPL-2.0
 //
 
-#include <osi-utilities/tracefile/NativeBinaryTraceFileReader.h>
 #include <osi-utilities/tracefile/MCAPTraceFileWriter.h>
-
-#include "osi_groundtruth.pb.h"
-#include "osi_sensordata.pb.h"
-#include "osi_sensorview.pb.h"
-#include "osi_hostvehicledata.pb.h"
-#include "osi_trafficupdate.pb.h"
-#include "osi_trafficcommand.pb.h"
-#include "osi_trafficcommandupdate.pb.h"
-#include "osi_motionrequest.pb.h"
-#include "osi_streamingupdate.pb.h"
+#include <osi-utilities/tracefile/NativeBinaryTraceFileReader.h>
 
 #include <filesystem>
 
+#include "osi_groundtruth.pb.h"
+#include "osi_hostvehicledata.pb.h"
+#include "osi_motionrequest.pb.h"
+#include "osi_sensordata.pb.h"
+#include "osi_sensorview.pb.h"
+#include "osi_streamingupdate.pb.h"
+#include "osi_trafficcommand.pb.h"
+#include "osi_trafficcommandupdate.pb.h"
+#include "osi_trafficupdate.pb.h"
 
 const std::unordered_map<osi3::ReaderTopLevelMessage, const google::protobuf::Descriptor*> kMessageTypeToDescriptor = {
     {osi3::ReaderTopLevelMessage::kGroundTruth, osi3::GroundTruth::descriptor()},
@@ -38,47 +37,46 @@ const google::protobuf::Descriptor* GetDescriptorForMessageType(const osi3::Read
     throw std::runtime_error("Unknown message type");
 }
 
-template<typename T>
+template <typename T>
 void WriteTypedMessage(const std::optional<osi3::ReadResult>& read_result, osi3::MCAPTraceFileWriter& writer, const std::string& topic) {
     writer.WriteMessage(*static_cast<T*>(read_result->message.get()), topic);
 }
 
-void ProcessMessage(const std::optional<osi3::ReadResult> &read_result, osi3::MCAPTraceFileWriter& writer) {
+void ProcessMessage(const std::optional<osi3::ReadResult>& read_result, osi3::MCAPTraceFileWriter& writer) {
     const std::string topic = "ConvertedTrace";
     switch (read_result->message_type) {
         case osi3::ReaderTopLevelMessage::kGroundTruth:
             WriteTypedMessage<osi3::GroundTruth>(read_result, writer, topic);
-        break;
+            break;
         case osi3::ReaderTopLevelMessage::kSensorData:
             WriteTypedMessage<osi3::SensorData>(read_result, writer, topic);
-        break;
+            break;
         case osi3::ReaderTopLevelMessage::kSensorView:
             WriteTypedMessage<osi3::SensorView>(read_result, writer, topic);
-        break;
+            break;
         case osi3::ReaderTopLevelMessage::kHostVehicleData:
             WriteTypedMessage<osi3::HostVehicleData>(read_result, writer, topic);
-        break;
+            break;
         case osi3::ReaderTopLevelMessage::kTrafficCommand:
             WriteTypedMessage<osi3::TrafficCommand>(read_result, writer, topic);
-        break;
+            break;
         case osi3::ReaderTopLevelMessage::kTrafficCommandUpdate:
             WriteTypedMessage<osi3::TrafficCommandUpdate>(read_result, writer, topic);
-        break;
+            break;
         case osi3::ReaderTopLevelMessage::kTrafficUpdate:
             WriteTypedMessage<osi3::TrafficUpdate>(read_result, writer, topic);
-        break;
+            break;
         case osi3::ReaderTopLevelMessage::kMotionRequest:
             WriteTypedMessage<osi3::MotionRequest>(read_result, writer, topic);
-        break;
+            break;
         case osi3::ReaderTopLevelMessage::kStreamingUpdate:
             WriteTypedMessage<osi3::StreamingUpdate>(read_result, writer, topic);
-        break;
+            break;
         default:
             std::cout << "Could not determine type of message" << std::endl;
-        break;
+            break;
     }
 }
-
 
 struct ProgramOptions {
     std::string input_file_path;
@@ -86,19 +84,12 @@ struct ProgramOptions {
     osi3::ReaderTopLevelMessage message_type = osi3::ReaderTopLevelMessage::kUnknown;
 };
 
-
 const std::unordered_map<std::string, osi3::ReaderTopLevelMessage> kValidTypes = {
-    {"GroundTruth", osi3::ReaderTopLevelMessage::kGroundTruth},
-    {"SensorData", osi3::ReaderTopLevelMessage::kSensorData},
-    {"SensorView", osi3::ReaderTopLevelMessage::kSensorView},
-    {"HostVehicleData", osi3::ReaderTopLevelMessage::kHostVehicleData},
-    {"TrafficCommand", osi3::ReaderTopLevelMessage::kTrafficCommand},
-    {"TrafficCommandUpdate", osi3::ReaderTopLevelMessage::kTrafficCommandUpdate},
-    {"TrafficUpdate", osi3::ReaderTopLevelMessage::kTrafficUpdate},
-    {"MotionRequest", osi3::ReaderTopLevelMessage::kMotionRequest},
-    {"StreamingUpdate", osi3::ReaderTopLevelMessage::kStreamingUpdate}
-};
-
+    {"GroundTruth", osi3::ReaderTopLevelMessage::kGroundTruth},        {"SensorData", osi3::ReaderTopLevelMessage::kSensorData},
+    {"SensorView", osi3::ReaderTopLevelMessage::kSensorView},          {"HostVehicleData", osi3::ReaderTopLevelMessage::kHostVehicleData},
+    {"TrafficCommand", osi3::ReaderTopLevelMessage::kTrafficCommand},  {"TrafficCommandUpdate", osi3::ReaderTopLevelMessage::kTrafficCommandUpdate},
+    {"TrafficUpdate", osi3::ReaderTopLevelMessage::kTrafficUpdate},    {"MotionRequest", osi3::ReaderTopLevelMessage::kMotionRequest},
+    {"StreamingUpdate", osi3::ReaderTopLevelMessage::kStreamingUpdate}};
 
 void printHelp() {
     std::cout << "Usage: convert_osi2mcap <input_file> <output_file> [--input-type <message_type>]\n\n"
@@ -173,7 +164,6 @@ int main(const int argc, const char** argv) {
     }
 
     tracefile_writer.AddChannel("ConvertedTrace", descriptor);
-
 
     while (tracefile_reader.HasNext()) {
         std::cout << "reading next message\n";

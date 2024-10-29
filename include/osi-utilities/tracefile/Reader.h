@@ -6,62 +6,58 @@
 #ifndef OSIUTILITIES_TRACEFILE_READER_H_
 #define OSIUTILITIES_TRACEFILE_READER_H_
 
-#include <string>
-#include <memory>
-#include <optional>
 #include <google/protobuf/message.h>
 
-namespace osi3 {
+#include <memory>
+#include <optional>
+#include <string>
 
+namespace osi3 {
 /**
  * @brief Enumeration of supported top-level message types in trace files
  */
-enum class ReaderTopLevelMessage : u_int8_t
-{
-    kUnknown = 0,              /**< Unknown message type */
-    kGroundTruth,              /**< OSI3::GroundTruth data */
-    kSensorData,               /**< OSI3::SensorSata */
-    kSensorView,               /**< OSI3::SensorView */
-    kSensorViewConfiguration,  /**< OSI3::SensorViewConfiguration */
-    kHostVehicleData,          /**< OSI3::HostVehicleData */
-    kTrafficCommand,           /**< OSI3::TrafficCommand */
-    kTrafficCommandUpdate,     /**< OSI3::TrafficCommandUpdate */
-    kTrafficUpdate,            /**< OSI3::TrafficUpdate */
-    kMotionRequest,            /**< OSI3::MotionRequest */
-    kStreamingUpdate,          /**< OSI3::StreamingUpdate */
+enum class ReaderTopLevelMessage : u_int8_t {
+    kUnknown = 0,             /**< Unknown message type */
+    kGroundTruth,             /**< OSI3::GroundTruth data */
+    kSensorData,              /**< OSI3::SensorSata */
+    kSensorView,              /**< OSI3::SensorView */
+    kSensorViewConfiguration, /**< OSI3::SensorViewConfiguration */
+    kHostVehicleData,         /**< OSI3::HostVehicleData */
+    kTrafficCommand,          /**< OSI3::TrafficCommand */
+    kTrafficCommandUpdate,    /**< OSI3::TrafficCommandUpdate */
+    kTrafficUpdate,           /**< OSI3::TrafficUpdate */
+    kMotionRequest,           /**< OSI3::MotionRequest */
+    kStreamingUpdate,         /**< OSI3::StreamingUpdate */
 };
 
 /**
-* @brief Map of trace file names to their corresponding message type
-*/
-const std::unordered_map<std::string, osi3::ReaderTopLevelMessage> kMessageTypeMap = {
- {"_gt_", osi3::ReaderTopLevelMessage::kGroundTruth},
- {"_sd_", osi3::ReaderTopLevelMessage::kSensorData},
- {"_sv_", osi3::ReaderTopLevelMessage::kSensorView},
- {"_svc_", osi3::ReaderTopLevelMessage::kSensorViewConfiguration},
- {"_hvd_", osi3::ReaderTopLevelMessage::kHostVehicleData},
- {"_tc_", osi3::ReaderTopLevelMessage::kTrafficCommand},
- {"_tcu_", osi3::ReaderTopLevelMessage::kTrafficCommandUpdate},
- {"_tu_", osi3::ReaderTopLevelMessage::kTrafficUpdate},
- {"_mr_", osi3::ReaderTopLevelMessage::kMotionRequest},
- {"_su_", osi3::ReaderTopLevelMessage::kStreamingUpdate}
-};
-
+ * @brief Map of trace file names to their corresponding message type
+ */
+const std::unordered_map<std::string, osi3::ReaderTopLevelMessage> kMessageTypeMap = {{"_gt_", osi3::ReaderTopLevelMessage::kGroundTruth},
+                                                                                      {"_sd_", osi3::ReaderTopLevelMessage::kSensorData},
+                                                                                      {"_sv_", osi3::ReaderTopLevelMessage::kSensorView},
+                                                                                      {"_svc_", osi3::ReaderTopLevelMessage::kSensorViewConfiguration},
+                                                                                      {"_hvd_", osi3::ReaderTopLevelMessage::kHostVehicleData},
+                                                                                      {"_tc_", osi3::ReaderTopLevelMessage::kTrafficCommand},
+                                                                                      {"_tcu_", osi3::ReaderTopLevelMessage::kTrafficCommandUpdate},
+                                                                                      {"_tu_", osi3::ReaderTopLevelMessage::kTrafficUpdate},
+                                                                                      {"_mr_", osi3::ReaderTopLevelMessage::kMotionRequest},
+                                                                                      {"_su_", osi3::ReaderTopLevelMessage::kStreamingUpdate}};
 
 /**
  * @brief Structure containing the result of a read operation
  */
 struct ReadResult {
-    std::unique_ptr<google::protobuf::Message> message;     /**< The parsed protobuf message */
-    std::string channel;                                    /**< Channel name (for MCAP format) */
-    ReaderTopLevelMessage message_type = ReaderTopLevelMessage::kUnknown;  /**< Type of the message */
+    std::unique_ptr<google::protobuf::Message> message;                   /**< The parsed protobuf message */
+    std::string channel;                                                  /**< Channel name (for MCAP format) */
+    ReaderTopLevelMessage message_type = ReaderTopLevelMessage::kUnknown; /**< Type of the message */
 };
 
 /**
  * @brief Abstract base class for reading trace files in various formats
  */
 class TraceFileReader {
-public:
+   public:
     /** @brief Default constructor */
     TraceFileReader() = default;
 
@@ -112,6 +108,5 @@ public:
  * @return Unique pointer to a TraceFileReader implementation
  */
 std::unique_ptr<TraceFileReader> createTraceFileReader(const std::string& format);
-
-} // namespace osi3
+}  // namespace osi3
 #endif

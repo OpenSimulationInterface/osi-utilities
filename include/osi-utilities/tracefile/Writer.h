@@ -6,10 +6,11 @@
 #ifndef OSIUTILITIES_TRACEFILE_WRITER_H_
 #define OSIUTILITIES_TRACEFILE_WRITER_H_
 
-#include <string>
-#include <memory>
-#include <filesystem>
 #include <google/protobuf/message.h>
+
+#include <filesystem>
+#include <memory>
+#include <string>
 
 namespace osi3 {
 
@@ -20,7 +21,7 @@ namespace osi3 {
  * Different implementations can support various file formats like MCAP.
  */
 class TraceFileWriter {
-public:
+   public:
     /** @brief Virtual destructor */
     virtual ~TraceFileWriter() = default;
 
@@ -77,5 +78,5 @@ public:
  */
 std::unique_ptr<TraceFileWriter> CreateTraceFileWriter(const std::string& format);
 
-} // namespace osi3
+}  // namespace osi3
 #endif

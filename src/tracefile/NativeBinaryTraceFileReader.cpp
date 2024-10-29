@@ -4,13 +4,13 @@
 //
 
 #include "osi-utilities/tracefile/NativeBinaryTraceFileReader.h"
-#include "google/protobuf/descriptor.pb.h"
-#include <sstream>
-#include <filesystem>
 
+#include <filesystem>
+#include <sstream>
+
+#include "google/protobuf/descriptor.pb.h"
 
 namespace osi3 {
-
 
 bool NativeBinaryTraceFileReader::Open(const std::string& filename, const ReaderTopLevelMessage message_type) {
     message_type_ = message_type;
@@ -57,15 +57,9 @@ bool NativeBinaryTraceFileReader::Open(const std::string& filename) {
     return true;
 }
 
+void NativeBinaryTraceFileReader::Close() { trace_file_.close(); }
 
-
-void NativeBinaryTraceFileReader::Close() {
-    trace_file_.close();
-}
-
-bool NativeBinaryTraceFileReader::HasNext() {
-    return (trace_file_ && trace_file_.peek() != EOF);
-}
+bool NativeBinaryTraceFileReader::HasNext() { return (trace_file_ && trace_file_.peek() != EOF); }
 
 std::optional<ReadResult> NativeBinaryTraceFileReader::ReadMessage() {
     if (!trace_file_) {
@@ -77,14 +71,12 @@ std::optional<ReadResult> NativeBinaryTraceFileReader::ReadMessage() {
         throw std::runtime_error("Failed to read message");
     }
 
-
     ReadResult result;
     result.message = parser_(serialized_msg);
     result.message_type = message_type_;
 
     return result;
 }
-
 
 std::vector<char> NativeBinaryTraceFileReader::ReadNextMessageFromFile() {
     uint32_t message_size = 0;
@@ -99,5 +91,4 @@ std::vector<char> NativeBinaryTraceFileReader::ReadNextMessageFromFile() {
     return serialized_msg;
 }
 
-
-} // osi
+}  // namespace osi3

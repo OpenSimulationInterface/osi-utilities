@@ -5,17 +5,17 @@
 
 #include <osi-utilities/tracefile/NativeBinaryTraceFileReader.h>
 
+#include <optional>
+
 #include "osi_groundtruth.pb.h"
+#include "osi_hostvehicledata.pb.h"
+#include "osi_motionrequest.pb.h"
 #include "osi_sensordata.pb.h"
 #include "osi_sensorview.pb.h"
-#include "osi_hostvehicledata.pb.h"
+#include "osi_streamingupdate.pb.h"
 #include "osi_trafficcommand.pb.h"
 #include "osi_trafficcommandupdate.pb.h"
 #include "osi_trafficupdate.pb.h"
-#include "osi_motionrequest.pb.h"
-#include "osi_streamingupdate.pb.h"
-
-#include <optional>
 
 template <typename T>
 void PrintTimestamp(T msg) {
@@ -23,54 +23,52 @@ void PrintTimestamp(T msg) {
     std::cout << "Type: " << msg->descriptor()->full_name() << " Timestamp " << timestamp << "\n";
 }
 
-
-void CastMsgAndPrintTimestamp(const std::optional<osi3::ReadResult>& reading_result)
-{
+void CastMsgAndPrintTimestamp(const std::optional<osi3::ReadResult>& reading_result) {
     // while reading_result->message_type already contains the correct deserialized OSI message type,
     // we need to cast the pointer during runtime to allow multiple different trace files to be read
     switch (reading_result->message_type) {
         case osi3::ReaderTopLevelMessage::kGroundTruth: {
-            auto *const ground_truth = dynamic_cast<osi3::GroundTruth*>(reading_result->message.get());
+            auto* const ground_truth = dynamic_cast<osi3::GroundTruth*>(reading_result->message.get());
             PrintTimestamp(ground_truth);
             break;
         }
         case osi3::ReaderTopLevelMessage::kSensorData: {
-            auto *const sensor_data = dynamic_cast<osi3::SensorData*>(reading_result->message.get());
+            auto* const sensor_data = dynamic_cast<osi3::SensorData*>(reading_result->message.get());
             PrintTimestamp(sensor_data);
             break;
         }
         case osi3::ReaderTopLevelMessage::kSensorView: {
-            auto *const sensor_view = dynamic_cast<osi3::SensorView*>(reading_result->message.get());
+            auto* const sensor_view = dynamic_cast<osi3::SensorView*>(reading_result->message.get());
             PrintTimestamp(sensor_view);
             break;
         }
         case osi3::ReaderTopLevelMessage::kHostVehicleData: {
-            auto *const host_vehicle_data = dynamic_cast<osi3::HostVehicleData*>(reading_result->message.get());
+            auto* const host_vehicle_data = dynamic_cast<osi3::HostVehicleData*>(reading_result->message.get());
             PrintTimestamp(host_vehicle_data);
             break;
         }
         case osi3::ReaderTopLevelMessage::kTrafficCommand: {
-            auto *const traffic_command = dynamic_cast<osi3::TrafficCommand*>(reading_result->message.get());
+            auto* const traffic_command = dynamic_cast<osi3::TrafficCommand*>(reading_result->message.get());
             PrintTimestamp(traffic_command);
             break;
         }
         case osi3::ReaderTopLevelMessage::kTrafficCommandUpdate: {
-            auto *const traffic_command_update = dynamic_cast<osi3::TrafficCommandUpdate*>(reading_result->message.get());
+            auto* const traffic_command_update = dynamic_cast<osi3::TrafficCommandUpdate*>(reading_result->message.get());
             PrintTimestamp(traffic_command_update);
             break;
         }
         case osi3::ReaderTopLevelMessage::kTrafficUpdate: {
-            auto *const traffic_update = dynamic_cast<osi3::TrafficUpdate*>(reading_result->message.get());
+            auto* const traffic_update = dynamic_cast<osi3::TrafficUpdate*>(reading_result->message.get());
             PrintTimestamp(traffic_update);
             break;
         }
         case osi3::ReaderTopLevelMessage::kMotionRequest: {
-            auto *const motion_request = dynamic_cast<osi3::MotionRequest*>(reading_result->message.get());
+            auto* const motion_request = dynamic_cast<osi3::MotionRequest*>(reading_result->message.get());
             PrintTimestamp(motion_request);
             break;
         }
         case osi3::ReaderTopLevelMessage::kStreamingUpdate: {
-            auto *const streaming_update = dynamic_cast<osi3::StreamingUpdate*>(reading_result->message.get());
+            auto* const streaming_update = dynamic_cast<osi3::StreamingUpdate*>(reading_result->message.get());
             PrintTimestamp(streaming_update);
             break;
         }
@@ -86,18 +84,16 @@ struct ProgramOptions {
     osi3::ReaderTopLevelMessage message_type = osi3::ReaderTopLevelMessage::kUnknown;
 };
 
-const std::unordered_map<std::string, osi3::ReaderTopLevelMessage> kValidTypes = {
-    {"GroundTruth", osi3::ReaderTopLevelMessage::kGroundTruth},
-    {"SensorData", osi3::ReaderTopLevelMessage::kSensorData},
-    {"SensorView", osi3::ReaderTopLevelMessage::kSensorView},
-    {"SensorViewConfiguration", osi3::ReaderTopLevelMessage::kSensorViewConfiguration},
-    {"HostVehicleData", osi3::ReaderTopLevelMessage::kHostVehicleData},
-    {"TrafficCommand", osi3::ReaderTopLevelMessage::kTrafficCommand},
-    {"TrafficCommandUpdate", osi3::ReaderTopLevelMessage::kTrafficCommandUpdate},
-    {"TrafficUpdate", osi3::ReaderTopLevelMessage::kTrafficUpdate},
-    {"MotionRequest", osi3::ReaderTopLevelMessage::kMotionRequest},
-    {"StreamingUpdate", osi3::ReaderTopLevelMessage::kStreamingUpdate}
-};
+const std::unordered_map<std::string, osi3::ReaderTopLevelMessage> kValidTypes = {{"GroundTruth", osi3::ReaderTopLevelMessage::kGroundTruth},
+                                                                                  {"SensorData", osi3::ReaderTopLevelMessage::kSensorData},
+                                                                                  {"SensorView", osi3::ReaderTopLevelMessage::kSensorView},
+                                                                                  {"SensorViewConfiguration", osi3::ReaderTopLevelMessage::kSensorViewConfiguration},
+                                                                                  {"HostVehicleData", osi3::ReaderTopLevelMessage::kHostVehicleData},
+                                                                                  {"TrafficCommand", osi3::ReaderTopLevelMessage::kTrafficCommand},
+                                                                                  {"TrafficCommandUpdate", osi3::ReaderTopLevelMessage::kTrafficCommandUpdate},
+                                                                                  {"TrafficUpdate", osi3::ReaderTopLevelMessage::kTrafficUpdate},
+                                                                                  {"MotionRequest", osi3::ReaderTopLevelMessage::kMotionRequest},
+                                                                                  {"StreamingUpdate", osi3::ReaderTopLevelMessage::kStreamingUpdate}};
 
 void printHelp() {
     std::cout << "Usage: example_native_binary_reader <file_path> [--type <message_type>]\n\n"
@@ -135,7 +131,6 @@ std::optional<ProgramOptions> parseArgs(const int argc, const char** argv) {
 
     return options;
 }
-
 
 int main(const int argc, const char** argv) {
     // Parse program options
