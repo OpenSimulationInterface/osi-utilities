@@ -35,16 +35,16 @@ TEST_F(NativeBinaryTraceFileWriterTest, OpenInvalidExtension) {
 TEST_F(NativeBinaryTraceFileWriterTest, WriteGroundTruthMessage) {
     ASSERT_TRUE(writer_.Open(test_file_gt_));
 
-    osi3::GroundTruth gt;
-    gt.mutable_timestamp()->set_seconds(123);
-    gt.mutable_timestamp()->set_nanos(456);
+    osi3::GroundTruth ground_truth;
+    ground_truth.mutable_timestamp()->set_seconds(123);
+    ground_truth.mutable_timestamp()->set_nanos(456);
 
-    EXPECT_TRUE(writer_.WriteMessage(gt));
+    EXPECT_TRUE(writer_.WriteMessage(ground_truth));
     writer_.Close();
 
     // Verify written content
     std::ifstream file(test_file_gt_, std::ios::binary);
-    uint32_t size;
+    uint32_t size = 0;
     file.read(reinterpret_cast<char*>(&size), sizeof(size));
     std::vector<char> buffer(size);
     file.read(buffer.data(), size);
@@ -58,16 +58,16 @@ TEST_F(NativeBinaryTraceFileWriterTest, WriteGroundTruthMessage) {
 TEST_F(NativeBinaryTraceFileWriterTest, WriteSensorViewMessage) {
     ASSERT_TRUE(writer_.Open(test_file_sv_));
 
-    osi3::SensorView sv;
-    sv.mutable_timestamp()->set_seconds(789);
-    sv.mutable_timestamp()->set_nanos(101);
+    osi3::SensorView sensor_view;
+    sensor_view.mutable_timestamp()->set_seconds(789);
+    sensor_view.mutable_timestamp()->set_nanos(101);
 
-    EXPECT_TRUE(writer_.WriteMessage(sv));
+    EXPECT_TRUE(writer_.WriteMessage(sensor_view));
     writer_.Close();
 
     // Verify written content
     std::ifstream file(test_file_sv_, std::ios::binary);
-    uint32_t size;
+    uint32_t size = 0;
     file.read(reinterpret_cast<char*>(&size), sizeof(size));
     std::vector<char> buffer(size);
     file.read(buffer.data(), size);
@@ -81,7 +81,8 @@ TEST_F(NativeBinaryTraceFileWriterTest, WriteSensorViewMessage) {
 TEST_F(NativeBinaryTraceFileWriterTest, WriteMultipleMessages) {
     ASSERT_TRUE(writer_.Open(test_file_gt_));
 
-    osi3::GroundTruth gt1, gt2;
+    osi3::GroundTruth gt1;
+    osi3::GroundTruth gt2;
     gt1.mutable_timestamp()->set_seconds(111);
     gt2.mutable_timestamp()->set_seconds(222);
 
@@ -91,8 +92,8 @@ TEST_F(NativeBinaryTraceFileWriterTest, WriteMultipleMessages) {
 
 TEST_F(NativeBinaryTraceFileWriterTest, WriteToClosedFile) {
     writer_.Close();
-    osi3::GroundTruth gt;
-    EXPECT_FALSE(writer_.WriteMessage(gt));
+    osi3::GroundTruth ground_truth;
+    EXPECT_FALSE(writer_.WriteMessage(ground_truth));
 }
 
 TEST_F(NativeBinaryTraceFileWriterTest, ReopenFile) {

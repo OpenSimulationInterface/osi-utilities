@@ -30,16 +30,16 @@ TEST_F(MCAPTraceFileWriterTest, WriteMessage) {
     ASSERT_TRUE(writer_.Open(test_file_));
 
     // Create test message
-    osi3::GroundTruth gt;
-    gt.mutable_timestamp()->set_seconds(123);
-    gt.mutable_timestamp()->set_nanos(456);
+    osi3::GroundTruth ground_truth;
+    ground_truth.mutable_timestamp()->set_seconds(123);
+    ground_truth.mutable_timestamp()->set_nanos(456);
 
     // Add channel for ground truth
     const std::string topic = "/ground_truth";
     writer_.AddChannel(topic, osi3::GroundTruth::descriptor(), {});
 
     // Write message
-    EXPECT_TRUE(writer_.WriteMessage(gt, topic));
+    EXPECT_TRUE(writer_.WriteMessage(ground_truth, topic));
 }
 
 TEST_F(MCAPTraceFileWriterTest, SetMetadata) {
@@ -76,16 +76,16 @@ TEST_F(MCAPTraceFileWriterTest, AddChannel) {
 TEST_F(MCAPTraceFileWriterTest, WriteMessageWithoutChannel) {
     ASSERT_TRUE(writer_.Open(test_file_));
 
-    osi3::GroundTruth gt;
-    gt.mutable_timestamp()->set_seconds(123);
+    osi3::GroundTruth ground_truth;
+    ground_truth.mutable_timestamp()->set_seconds(123);
 
     // Try writing without adding channel first
-    EXPECT_FALSE(writer_.WriteMessage(gt, "/ground_truth"));
+    EXPECT_FALSE(writer_.WriteMessage(ground_truth, "/ground_truth"));
 }
 
 TEST_F(MCAPTraceFileWriterTest, WriteMessageWithEmptyTopic) {
     ASSERT_TRUE(writer_.Open(test_file_));
 
-    osi3::GroundTruth gt;
-    EXPECT_FALSE(writer_.WriteMessage(gt, ""));
+    osi3::GroundTruth ground_truth;
+    EXPECT_FALSE(writer_.WriteMessage(ground_truth, ""));
 }

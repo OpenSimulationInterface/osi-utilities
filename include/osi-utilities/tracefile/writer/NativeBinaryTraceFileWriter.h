@@ -23,7 +23,7 @@ class NativeBinaryTraceFileWriter : public TraceFileWriter {
     bool WriteMessage(T top_level_message);
 
     template <typename T>
-    bool WriteMessage(T /*top_level_message*/, const std::string& /*topic*/) {
+    static bool WriteMessage(T /*top_level_message*/, const std::string& /*topic*/) {
         return false;
     }
 

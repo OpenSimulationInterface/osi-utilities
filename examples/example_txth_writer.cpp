@@ -18,7 +18,7 @@ int main(int argc, const char** argv) {
     std::cout << "Starting TXTH Writer example:" << std::endl;
 
     // Create writer and open file
-    auto tracefile_writer = osi3::txthTraceFileWriter();
+    auto tracefile_writer = osi3::TxthTraceFileWriter();
     const auto tracefile_path = GenerateTempFilePath();
     std::cout << "Creating tracefile at " << tracefile_path << std::endl;
     tracefile_writer.Open(tracefile_path);

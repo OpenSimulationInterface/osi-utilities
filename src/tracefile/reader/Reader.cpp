@@ -15,7 +15,7 @@ std::unique_ptr<osi3::TraceFileReader> createTraceFileReader(const std::string& 
     } else if (format == "osi") {
         return std::make_unique<osi3::NativeBinaryTraceFileReader>();
     } else if (format == "txth") {
-        return std::make_unique<osi3::txthTraceFileReader>();
+        return std::make_unique<osi3::TxthTraceFileReader>();
     } else {
         throw std::invalid_argument("Unsupported format: " + format);
     }

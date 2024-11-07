@@ -5,6 +5,8 @@
 
 #include "osi-utilities/tracefile/writer/txthTraceFileWriter.h"
 
+#include <google/protobuf/text_format.h>
+
 #include "osi_groundtruth.pb.h"
 #include "osi_hostvehicledata.pb.h"
 #include "osi_motionrequest.pb.h"
@@ -17,7 +19,7 @@
 
 namespace osi3 {
 
-bool txthTraceFileWriter::Open(const std::string& filename) {
+bool TxthTraceFileWriter::Open(const std::string& filename) {
     if (filename.substr(filename.length() - 5) != ".txth") {
         std::cerr << "Error: Filename must end with .txth extension\n";
         return false;
@@ -31,7 +33,7 @@ bool txthTraceFileWriter::Open(const std::string& filename) {
     return false;
 }
 
-void txthTraceFileWriter::Close() {
+void TxthTraceFileWriter::Close() {
     if (file_open_) {
         trace_file_.close();
         file_open_ = false;
@@ -39,7 +41,7 @@ void txthTraceFileWriter::Close() {
 }
 
 template <typename T>
-bool txthTraceFileWriter::WriteMessage(T top_level_message) {
+bool TxthTraceFileWriter::WriteMessage(T top_level_message) {
     if (!file_open_) {
         std::cerr << "Error: Cannot write message, file is not open\n";
         return false;
@@ -56,14 +58,15 @@ bool txthTraceFileWriter::WriteMessage(T top_level_message) {
 }
 
 // Template instantiations for allowed OSI top-level messages
-template bool txthTraceFileWriter::WriteMessage<osi3::GroundTruth>(osi3::GroundTruth);
-template bool txthTraceFileWriter::WriteMessage<osi3::SensorData>(osi3::SensorData);
-template bool txthTraceFileWriter::WriteMessage<osi3::SensorView>(osi3::SensorView);
-template bool txthTraceFileWriter::WriteMessage<osi3::HostVehicleData>(osi3::HostVehicleData);
-template bool txthTraceFileWriter::WriteMessage<osi3::TrafficCommand>(osi3::TrafficCommand);
-template bool txthTraceFileWriter::WriteMessage<osi3::TrafficCommandUpdate>(osi3::TrafficCommandUpdate);
-template bool txthTraceFileWriter::WriteMessage<osi3::TrafficUpdate>(osi3::TrafficUpdate);
-template bool txthTraceFileWriter::WriteMessage<osi3::MotionRequest>(osi3::MotionRequest);
-template bool txthTraceFileWriter::WriteMessage<osi3::StreamingUpdate>(osi3::StreamingUpdate);
+template bool TxthTraceFileWriter::WriteMessage<osi3::GroundTruth>(osi3::GroundTruth);
+template bool TxthTraceFileWriter::WriteMessage<osi3::SensorData>(osi3::SensorData);
+template bool TxthTraceFileWriter::WriteMessage<osi3::SensorView>(osi3::SensorView);
+template bool TxthTraceFileWriter::WriteMessage<osi3::HostVehicleData>(osi3::HostVehicleData);
+template bool TxthTraceFileWriter::WriteMessage<osi3::TrafficCommand>(osi3::TrafficCommand);
+template bool TxthTraceFileWriter::WriteMessage<osi3::TrafficCommandUpdate>(osi3::TrafficCommandUpdate);
+template bool TxthTraceFileWriter::WriteMessage<osi3::TrafficUpdate>(osi3::TrafficUpdate);
+template bool TxthTraceFileWriter::WriteMessage<osi3::MotionRequest>(osi3::MotionRequest);
+template bool TxthTraceFileWriter::WriteMessage<osi3::StreamingUpdate>(osi3::StreamingUpdate);
+
 
 }  // namespace osi3

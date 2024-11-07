@@ -24,7 +24,7 @@
 #include "osi_trafficupdate.pb.h"
 
 namespace osi3 {
-class txthTraceFileReader final : public TraceFileReader {
+class TxthTraceFileReader final : public TraceFileReader {
     /**
      * @brief Function type for parsing protobuf TextFormat strings into protobuf objects
      */

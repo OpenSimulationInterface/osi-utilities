@@ -9,7 +9,7 @@
 
 namespace osi3 {
 
-bool txthTraceFileReader::Open(const std::string& filename) {
+bool TxthTraceFileReader::Open(const std::string& filename) {
     if (filename.find(".txth") == std::string::npos) {
         std::cerr << "ERROR: The trace file '" << filename << "' must have a '.txth' extension." << std::endl;
         return false;
@@ -46,16 +46,16 @@ bool txthTraceFileReader::Open(const std::string& filename) {
     return trace_file_.is_open();
 }
 
-bool txthTraceFileReader::Open(const std::string& filename, const ReaderTopLevelMessage message_type) {
+bool TxthTraceFileReader::Open(const std::string& filename, const ReaderTopLevelMessage message_type) {
     message_type_ = message_type;
     return Open(filename);
 }
 
-void txthTraceFileReader::Close() { trace_file_.close(); }
+void TxthTraceFileReader::Close() { trace_file_.close(); }
 
-bool txthTraceFileReader::HasNext() { return trace_file_ && !trace_file_.eof(); }
+bool TxthTraceFileReader::HasNext() { return trace_file_ && !trace_file_.eof(); }
 
-std::optional<ReadResult> txthTraceFileReader::ReadMessage() {
+std::optional<ReadResult> TxthTraceFileReader::ReadMessage() {
     if (!trace_file_) {
         return std::nullopt;
     }
@@ -71,7 +71,7 @@ std::optional<ReadResult> txthTraceFileReader::ReadMessage() {
     return result;
 }
 
-std::string txthTraceFileReader::ReadNextMessageFromFile() {
+std::string TxthTraceFileReader::ReadNextMessageFromFile() {
     std::string message;
     std::string line;
     uint last_position = 0;

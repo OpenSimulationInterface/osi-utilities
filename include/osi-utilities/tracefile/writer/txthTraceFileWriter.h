@@ -6,20 +6,18 @@
 #ifndef OSIUTILITIES_TRACEFILE_WRITER_TXTHTRACEFILEWRITER_H_
 #define OSIUTILITIES_TRACEFILE_WRITER_TXTHTRACEFILEWRITER_H_
 
-#include <google/protobuf/text_format.h>
-
 #include <fstream>
-
 #include "../Writer.h"
+
 
 namespace osi3 {
 
-class txthTraceFileWriter final : public TraceFileWriter {
+class TxthTraceFileWriter final : public TraceFileWriter {
    public:
     bool Open(const std::string& filename) override;
     void Close() override;
 
-    bool SetMetadata(const std::string& name, const std::unordered_map<std::string, std::string>& metadata_entries) { return false; }
+    bool SetMetadata(const std::string& name, const std::unordered_map<std::string, std::string>& metadata_entries) override { return false; }
 
     template <typename T>
     bool WriteMessage(T top_level_message);

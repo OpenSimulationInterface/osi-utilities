@@ -142,7 +142,7 @@ int main(const int argc, const char** argv) {
     // Open the trace file
     // downstream functions of Open will guess the message type from the filename (options->message_type has the unknown value)
     // or use the provided cli argument value for the message type
-    auto tracefile_reader = osi3::txthTraceFileReader();
+    auto tracefile_reader = osi3::TxthTraceFileReader();
     if (!tracefile_reader.Open(options->file_path, options->message_type)) {
         std::cerr << "Error: Could not open file '" << options->file_path << "'\n\n";
         return 1;

@@ -11,9 +11,9 @@
 #include <fstream>
 #include <filesystem>
 
-class txthTraceFileReaderTest : public ::testing::Test {
+class TxthTraceFileReaderTest : public ::testing::Test {
 protected:
-    osi3::txthTraceFileReader reader_;
+    osi3::TxthTraceFileReader reader_;
     const std::string test_file_gt_ = "test_gt_.txth";
     const std::string test_file_sv_ = "test_sv_.txth";
 
@@ -65,19 +65,19 @@ private:
     }
 };
 
-TEST_F(txthTraceFileReaderTest, OpenGroundTruthFile) {
+TEST_F(TxthTraceFileReaderTest, OpenGroundTruthFile) {
     EXPECT_TRUE(reader_.Open(test_file_gt_));
 }
 
-TEST_F(txthTraceFileReaderTest, OpenSensorViewFile) {
+TEST_F(TxthTraceFileReaderTest, OpenSensorViewFile) {
     EXPECT_TRUE(reader_.Open(test_file_sv_));
 }
 
-TEST_F(txthTraceFileReaderTest, OpenWithExplicitMessageType) {
+TEST_F(TxthTraceFileReaderTest, OpenWithExplicitMessageType) {
     EXPECT_TRUE(reader_.Open(test_file_gt_, osi3::ReaderTopLevelMessage::kGroundTruth));
 }
 
-TEST_F(txthTraceFileReaderTest, ReadGroundTruthMessage) {
+TEST_F(TxthTraceFileReaderTest, ReadGroundTruthMessage) {
     ASSERT_TRUE(reader_.Open(test_file_gt_));
     EXPECT_TRUE(reader_.HasNext());
 
@@ -91,7 +91,7 @@ TEST_F(txthTraceFileReaderTest, ReadGroundTruthMessage) {
     EXPECT_EQ(gt->timestamp().nanos(), 456);
 }
 
-TEST_F(txthTraceFileReaderTest, ReadSensorViewMessage) {
+TEST_F(TxthTraceFileReaderTest, ReadSensorViewMessage) {
     ASSERT_TRUE(reader_.Open(test_file_sv_));
     EXPECT_TRUE(reader_.HasNext());
 
@@ -105,7 +105,7 @@ TEST_F(txthTraceFileReaderTest, ReadSensorViewMessage) {
     EXPECT_EQ(sv->timestamp().nanos(), 101);
 }
 
-TEST_F(txthTraceFileReaderTest, HasNextReturnsFalseWhenEmpty) {
+TEST_F(TxthTraceFileReaderTest, HasNextReturnsFalseWhenEmpty) {
     ASSERT_TRUE(reader_.Open(test_file_gt_));
     ASSERT_TRUE(reader_.HasNext());
     reader_.ReadMessage();
@@ -113,11 +113,11 @@ TEST_F(txthTraceFileReaderTest, HasNextReturnsFalseWhenEmpty) {
     EXPECT_FALSE(reader_.HasNext());
 }
 
-TEST_F(txthTraceFileReaderTest, OpenNonexistentFile) {
+TEST_F(TxthTraceFileReaderTest, OpenNonexistentFile) {
     EXPECT_FALSE(reader_.Open("nonexistent_file.txth"));
 }
 
-TEST_F(txthTraceFileReaderTest, OpenInvalidFileExtension) {
+TEST_F(TxthTraceFileReaderTest, OpenInvalidFileExtension) {
     const std::string invalid_file = "invalid.txt";
     {
         std::ofstream file(invalid_file);
@@ -127,7 +127,7 @@ TEST_F(txthTraceFileReaderTest, OpenInvalidFileExtension) {
     std::filesystem::remove(invalid_file);
 }
 
-TEST_F(txthTraceFileReaderTest, OpenInvalidMessageType) {
+TEST_F(TxthTraceFileReaderTest, OpenInvalidMessageType) {
     const std::string invalid_file = "invalid_type.txth";
     {
         std::ofstream file(invalid_file);
@@ -138,7 +138,7 @@ TEST_F(txthTraceFileReaderTest, OpenInvalidMessageType) {
     std::filesystem::remove(invalid_file);
 }
 
-TEST_F(txthTraceFileReaderTest, ReadEmptyFile) {
+TEST_F(TxthTraceFileReaderTest, ReadEmptyFile) {
     std::string empty_file = "empty.txth";
     {
         std::ofstream file(empty_file);
@@ -148,7 +148,7 @@ TEST_F(txthTraceFileReaderTest, ReadEmptyFile) {
     std::filesystem::remove(empty_file);
 }
 
-TEST_F(txthTraceFileReaderTest, ReadInvalidMessageFormat) {
+TEST_F(TxthTraceFileReaderTest, ReadInvalidMessageFormat) {
     std::string invalid_format_file = "invalid_format_gt_99.txth";
     {
         std::ofstream file(invalid_format_file);
