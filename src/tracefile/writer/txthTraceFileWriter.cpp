@@ -66,4 +66,4 @@ template bool txthTraceFileWriter::WriteMessage<osi3::TrafficUpdate>(osi3::Traff
 template bool txthTraceFileWriter::WriteMessage<osi3::MotionRequest>(osi3::MotionRequest);
 template bool txthTraceFileWriter::WriteMessage<osi3::StreamingUpdate>(osi3::StreamingUpdate);
 
-} // namespace osi3
+}  // namespace osi3

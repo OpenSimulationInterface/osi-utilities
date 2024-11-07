@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: MPL-2.0
 //
 
-#include <osi-utilities/tracefile/writer/MCAPTraceFileWriter.h>
 #include <osi-utilities/tracefile/reader/NativeBinaryTraceFileReader.h>
+#include <osi-utilities/tracefile/writer/MCAPTraceFileWriter.h>
 
 #include <filesystem>
 

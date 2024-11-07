@@ -42,7 +42,7 @@ int main(int argc, const char** argv) {
     host_vehicle->mutable_base()->mutable_velocity()->set_x(10.0);
 
     // write the data continuously in a loop
-    constexpr double kTimeStepSizeS = 0.1; // NOLINT
+    constexpr double kTimeStepSizeS = 0.1;  // NOLINT
     for (int i = 0; i < 10; ++i) {
         // manipulate the data so not every message is the same
         auto timestamp = sensor_view.timestamp().seconds() * 1000000000 + sensor_view.timestamp().nanos();

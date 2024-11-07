@@ -1,3 +1,8 @@
+//
+// Copyright (c) 2024, Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
+// SPDX-License-Identifier: MPL-2.0
+//
+
 #include "osi-utilities/tracefile/writer/NativeBinaryTraceFileWriter.h"
 
 #include "osi_groundtruth.pb.h"
@@ -60,4 +65,4 @@ template bool NativeBinaryTraceFileWriter::WriteMessage<osi3::TrafficUpdate>(osi
 template bool NativeBinaryTraceFileWriter::WriteMessage<osi3::MotionRequest>(osi3::MotionRequest);
 template bool NativeBinaryTraceFileWriter::WriteMessage<osi3::StreamingUpdate>(osi3::StreamingUpdate);
 
-} // namespace osi3
+}  // namespace osi3
