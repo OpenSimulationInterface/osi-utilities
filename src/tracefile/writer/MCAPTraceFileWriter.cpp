@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MPL-2.0
 //
 
-#include "osi-utilities/tracefile/MCAPTraceFileWriter.h"
+#include "osi-utilities/tracefile/writer/MCAPTraceFileWriter.h"
 
 #include "google/protobuf/descriptor.pb.h"
 #include "osi_groundtruth.pb.h"

@@ -7,11 +7,11 @@ option(BUILD_TESTING "Build the testing suite" ON)
 # specify library source files
 set(OSIUtilities_SRCS
         tracefile/MCAPImplementation.cpp
-        tracefile/Writer.cpp
-        tracefile/MCAPTraceFileWriter.cpp
-        tracefile/Reader.cpp
-        tracefile/NativeBinaryTraceFileReader.cpp
-        tracefile/TextTraceFileReader.cpp
+        tracefile/writer/Writer.cpp
+        tracefile/writer/MCAPTraceFileWriter.cpp
+        tracefile/reader/Reader.cpp
+        tracefile/reader/NativeBinaryTraceFileReader.cpp
+        tracefile/reader/txthTraceFileReader.cpp
 
 )
 

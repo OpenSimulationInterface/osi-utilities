@@ -5,7 +5,7 @@
 
 #include "osi-utilities/tracefile/Writer.h"
 
-#include "osi-utilities/tracefile/MCAPTraceFileWriter.h"
+#include "osi-utilities/tracefile/writer/MCAPTraceFileWriter.h"
 
 // todo use enum or something else instead of a string
 // todo for the writer use mcap as default if the "string" is empty

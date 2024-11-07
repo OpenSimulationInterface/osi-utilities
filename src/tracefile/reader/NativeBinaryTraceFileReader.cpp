@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MPL-2.0
 //
 
-#include "osi-utilities/tracefile/NativeBinaryTraceFileReader.h"
+#include "osi-utilities/tracefile/reader/NativeBinaryTraceFileReader.h"
 
 #include <filesystem>
 #include <sstream>

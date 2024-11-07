@@ -8,7 +8,7 @@
 
 #include <mcap/mcap.hpp>
 
-#include "Writer.h"
+#include "../Writer.h"
 
 namespace osi3 {
 /**
