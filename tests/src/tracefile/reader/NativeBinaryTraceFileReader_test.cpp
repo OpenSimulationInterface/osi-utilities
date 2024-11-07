@@ -4,7 +4,7 @@
 //
 
 #include <gtest/gtest.h>
-#include "osi-utilities/tracefile/NativeBinaryTraceFileReader.h"
+#include "osi-utilities/tracefile/reader/NativeBinaryTraceFileReader.h"
 #include "osi_groundtruth.pb.h"
 #include "osi_sensorview.pb.h"
 

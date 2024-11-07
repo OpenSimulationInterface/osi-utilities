@@ -4,7 +4,7 @@
 //
 
 #include <gtest/gtest.h>
-#include "osi-utilities/tracefile/MCAPTraceFileWriter.h"
+#include "osi-utilities/tracefile/writer/MCAPTraceFileWriter.h"
 #include "osi_groundtruth.pb.h"
 #include <filesystem>
 
