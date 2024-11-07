@@ -6,20 +6,19 @@
 #include "osi-utilities/tracefile/Writer.h"
 
 #include "osi-utilities/tracefile/writer/MCAPTraceFileWriter.h"
+#include "osi-utilities/tracefile/writer/NativeBinaryTraceFileWriter.h"
+#include "osi-utilities/tracefile/writer/txthTraceFileWriter.h"
 
 // todo use enum or something else instead of a string
 // todo for the writer use mcap as default if the "string" is empty
 // todo makes a writer factory really sense?
 std::unique_ptr<osi3::TraceFileWriter> CreateTraceFileWriter(const std::string& format) {
     if (format == "mcap") {
-        // throw std::invalid_argument("Format not implemented yet");
         return std::make_unique<osi3::MCAPTraceFileWriter>();
     } else if (format == "osi") {
-        throw std::invalid_argument("Format not implemented yet");
-        // return std::make_unique<OSIBinaryTraceFileWriter>();
+        return std::make_unique<osi3::NativeBinaryTraceFileWriter>();
     } else if (format == "txth") {
-        throw std::invalid_argument("Format not implemented yet");
-        // return std::make_unique<TxtTraceFileWriter>();
+        return std::make_unique<osi3::TxthTraceFileWriter>();
     } else {
         throw std::invalid_argument("Unsupported format: " + format);
     }
