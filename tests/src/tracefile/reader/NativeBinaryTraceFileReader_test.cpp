@@ -121,3 +121,58 @@ TEST_F(NativeBinaryTraceFileReaderTest, OpenInvalidFileFormat) {
     EXPECT_FALSE(reader_.Open(invalid_file));
     std::filesystem::remove(invalid_file);
 }
+
+TEST_F(NativeBinaryTraceFileReaderTest, OpenWithExplicitMessageType) {
+    EXPECT_TRUE(reader_.Open(test_file_gt_, osi3::ReaderTopLevelMessage::kGroundTruth));
+    EXPECT_TRUE(reader_.Open(test_file_sv_, osi3::ReaderTopLevelMessage::kSensorView));
+}
+
+TEST_F(NativeBinaryTraceFileReaderTest, ReadEmptyMessage) {
+    std::string empty_file = "empty_sv_99.osi";
+    {
+        std::ofstream file(empty_file, std::ios::binary);
+        uint32_t size = 0;
+        file.write(reinterpret_cast<char*>(&size), sizeof(size));
+    }
+
+    ASSERT_TRUE(reader_.Open(empty_file));
+    EXPECT_THROW(reader_.ReadMessage(), std::runtime_error);
+    std::filesystem::remove(empty_file);
+}
+
+TEST_F(NativeBinaryTraceFileReaderTest, ReadCorruptedMessageSize) {
+    std::string corrupted_file = "corrupted_size_sv_99.osi";
+    {
+        std::ofstream file(corrupted_file, std::ios::binary);
+        uint32_t invalid_size = 0xFFFFFFFF;
+        file.write(reinterpret_cast<char*>(&invalid_size), sizeof(invalid_size));
+    }
+
+    ASSERT_TRUE(reader_.Open(corrupted_file));
+    EXPECT_THROW(reader_.ReadMessage(), std::runtime_error);
+    std::filesystem::remove(corrupted_file);
+}
+
+TEST_F(NativeBinaryTraceFileReaderTest, ReadCorruptedMessageContent) {
+    std::string corrupted_file = "corrupted_content_sv_99.osi";
+    {
+        std::ofstream file(corrupted_file, std::ios::binary);
+        uint32_t size = 100;
+        file.write(reinterpret_cast<char*>(&size), sizeof(size));
+        // Write fewer data than specified in size
+        std::string incomplete_data = "incomplete";
+        file.write(incomplete_data.c_str(), incomplete_data.size());
+    }
+
+    ASSERT_TRUE(reader_.Open(corrupted_file));
+    EXPECT_THROW(reader_.ReadMessage(), std::runtime_error);
+    std::filesystem::remove(corrupted_file);
+}
+
+TEST_F(NativeBinaryTraceFileReaderTest, ReadMessageAfterClose) {
+    ASSERT_TRUE(reader_.Open(test_file_gt_));
+    reader_.Close();
+    EXPECT_FALSE(reader_.HasNext());
+    auto result = reader_.ReadMessage();
+    EXPECT_FALSE(result.has_value());
+}
