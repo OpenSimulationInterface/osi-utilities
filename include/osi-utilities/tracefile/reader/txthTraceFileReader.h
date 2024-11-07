@@ -48,7 +48,7 @@ class txthTraceFileReader final : public TraceFileReader {
     template <typename T>
     std::unique_ptr<google::protobuf::Message> ParseMessage(const std::string& data) {
         auto msg = std::make_unique<T>();
-        if (google::protobuf::TextFormat::ParseFromString(data, msg.get())) {
+        if (!google::protobuf::TextFormat::ParseFromString(data, msg.get())) {
             throw std::runtime_error("Failed to parse message");
         }
         return std::move(msg);

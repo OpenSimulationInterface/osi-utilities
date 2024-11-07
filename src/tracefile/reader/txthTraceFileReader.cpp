@@ -60,7 +60,7 @@ std::optional<ReadResult> txthTraceFileReader::ReadMessage() {
         return std::nullopt;
     }
 
-    std::string text_message = ReadNextMessageFromFile();
+    const std::string text_message = ReadNextMessageFromFile();
     if (text_message.empty()) {
         return std::nullopt;
     }
