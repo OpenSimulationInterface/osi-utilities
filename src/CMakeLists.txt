@@ -6,14 +6,14 @@ option(BUILD_TESTING "Build the testing suite" ON)
 
 # specify library source files
 set(OSIUtilities_SRCS
-        tracefile/MCAPImplementation.cpp
-        tracefile/writer/Writer.cpp
-        tracefile/writer/MCAPTraceFileWriter.cpp
-        tracefile/writer/txthTraceFileWriter.cpp
         tracefile/reader/Reader.cpp
+        tracefile/writer/Writer.cpp
+        tracefile/MCAPImplementation.cpp
         tracefile/reader/NativeBinaryTraceFileReader.cpp
+        tracefile/writer/NativeBinaryTraceFileWriter.cpp
         tracefile/reader/txthTraceFileReader.cpp
-
+        tracefile/writer/txthTraceFileWriter.cpp
+        tracefile/writer/MCAPTraceFileWriter.cpp
 )
 
 # Create a library target for the entire library
