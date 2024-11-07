@@ -51,6 +51,15 @@ class TraceFileWriter {
      * @brief Writes a protobuf message to the file
      * @tparam T Type of the protobuf message
      * @param top_level_message The message to write
+     * @return true if successful, false otherwise
+     */
+    template <typename T>
+    bool WriteMessage(T top_level_message) = delete;
+
+    /**
+     * @brief Writes a protobuf message to the file
+     * @tparam T Type of the protobuf message
+     * @param top_level_message The message to write
      * @param topic Optional topic name for the message
      * @return true if successful, false otherwise
      */
@@ -63,7 +72,7 @@ class TraceFileWriter {
      * @param metadata_entries Key-value pairs of metadata
      * @return true if successful, false otherwise
      */
-    virtual bool SetMetadata(const std::string& name, const std::unordered_map<std::string, std::string>& metadata_entries) { return false; }
+    virtual bool SetMetadata(const std::string& name, const std::unordered_map<std::string, std::string>& metadata_entries) = 0;
 
     /**
      * @brief Closes the trace file
