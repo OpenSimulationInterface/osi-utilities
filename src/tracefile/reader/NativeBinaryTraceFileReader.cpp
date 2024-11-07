@@ -60,7 +60,7 @@ void NativeBinaryTraceFileReader::Close() { trace_file_.close(); }
 bool NativeBinaryTraceFileReader::HasNext() { return (trace_file_ && trace_file_.peek() != EOF); }
 
 std::optional<ReadResult> NativeBinaryTraceFileReader::ReadMessage() {
-    if (!trace_file_) {
+    if ((!trace_file_) || !trace_file_.is_open()) {
         return std::nullopt;
     }
     const auto serialized_msg = ReadNextMessageFromFile();
