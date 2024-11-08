@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: MPL-2.0
 //
 
-#ifndef OSIUTILITIES_TRACEFILE_NATIVEBINARYTRACEFILEWRITER_H_
-#define OSIUTILITIES_TRACEFILE_NATIVEBINARYTRACEFILEWRITER_H_
+#ifndef OSIUTILITIES_TRACEFILE_WRITER_NATIVEBINARYTRACEFILEWRITER_H_
+#define OSIUTILITIES_TRACEFILE_WRITER_NATIVEBINARYTRACEFILEWRITER_H_
 
 #include <fstream>
 
@@ -12,7 +12,13 @@
 
 namespace osi3 {
 
-class NativeBinaryTraceFileWriter : public TraceFileWriter {
+/**
+ * @brief Implementation of TraceFileWriter for binary format files containing OSI messages
+ *
+ * This class provides functionality to write OSI messages in their native binary format.
+ * It stores messages in their serialized protobuf binary representation for efficient storage.
+ */
+class NativeBinaryTraceFileWriter final : public TraceFileWriter {
    public:
     bool Open(const std::string& filename) override;
     void Close() override;
@@ -33,4 +39,4 @@ class NativeBinaryTraceFileWriter : public TraceFileWriter {
 };
 
 }  // namespace osi3
-#endif
+#endif // OSIUTILITIES_TRACEFILE_WRITER_NATIVEBINARYTRACEFILEWRITER_H_

@@ -7,11 +7,17 @@
 #define OSIUTILITIES_TRACEFILE_WRITER_TXTHTRACEFILEWRITER_H_
 
 #include <fstream>
-#include "../Writer.h"
 
+#include "../Writer.h"
 
 namespace osi3 {
 
+/**
+ * @brief Implementation of TraceFileWriter for text format files containing OSI messages
+ *
+ * This class provides functionality to write OSI messages to text format files.
+ * It converts protobuf messages to their text representation for human-readable storage.
+ */
 class TxthTraceFileWriter final : public TraceFileWriter {
    public:
     bool Open(const std::string& filename) override;
@@ -28,4 +34,4 @@ class TxthTraceFileWriter final : public TraceFileWriter {
 };
 
 }  // namespace osi3
-#endif
+#endif  // OSIUTILITIES_TRACEFILE_WRITER_TXTHTRACEFILEWRITER_H_

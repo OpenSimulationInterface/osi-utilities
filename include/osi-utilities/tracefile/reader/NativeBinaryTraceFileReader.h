@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: MPL-2.0
 //
 
-#ifndef NATIVEBINARYTRACEFILEREADER_H
-#define NATIVEBINARYTRACEFILEREADER_H
+#ifndef OSIUTILITIES_TRACEFILE_READER_NATIVEBINARYTRACEFILEREADER_H_
+#define OSIUTILITIES_TRACEFILE_READER_NATIVEBINARYTRACEFILEREADER_H_
 
 #include <fstream>
 #include <functional>
@@ -22,10 +22,6 @@
 #include "osi_trafficupdate.pb.h"
 
 namespace osi3 {
-/**
- * @brief Function type for parsing binary buffers (as char vector) into protobuf objects
- */
-using MessageParserFunc = std::function<std::unique_ptr<google::protobuf::Message>(const std::vector<char>&)>;
 
 /**
  * @brief Reader implementation for native binary OSI trace files
@@ -52,6 +48,11 @@ class NativeBinaryTraceFileReader final : public osi3::TraceFileReader {
     ReaderTopLevelMessage GetMessageType() const { return message_type_; };
 
    private:
+   /**
+   * @brief Function type for parsing binary buffers (as char vector) into protobuf objects
+   */
+   using MessageParserFunc = std::function<std::unique_ptr<google::protobuf::Message>(const std::vector<char>&)>;
+
     std::ifstream trace_file_;                                            /**< File stream for reading */
     MessageParserFunc parser_;                                            /**< Message parsing function */
     ReaderTopLevelMessage message_type_{ReaderTopLevelMessage::kUnknown}; /**< Current message type */
@@ -89,4 +90,4 @@ class NativeBinaryTraceFileReader final : public osi3::TraceFileReader {
 };
 }  // namespace osi3
 
-#endif  // NATIVEBINARYTRACEFILEREADER_H
+#endif  // OSIUTILITIES_TRACEFILE_READER_NATIVEBINARYTRACEFILEREADER_H_

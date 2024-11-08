@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: MPL-2.0
 //
 
-#ifndef TXTHTRACEFILEREADER_H
-#define TXTHTRACEFILEREADER_H
+#ifndef OSIUTILITIES_TRACEFILE_READER_TXTHTRACEFILEREADER_H_
+#define OSIUTILITIES_TRACEFILE_READER_TXTHTRACEFILEREADER_H_
 
 #include <google/protobuf/text_format.h>
 
@@ -24,6 +24,13 @@
 #include "osi_trafficupdate.pb.h"
 
 namespace osi3 {
+
+/**
+ * @brief Implementation of TraceFileReader for text format files containing OSI messages
+ *
+ * This class provides functionality to read and parse OSI messages from text format files.
+ * It supports various OSI message types and handles their parsing using Google's protobuf TextFormat.
+ */
 class TxthTraceFileReader final : public TraceFileReader {
     /**
      * @brief Function type for parsing protobuf TextFormat strings into protobuf objects
@@ -32,6 +39,12 @@ class TxthTraceFileReader final : public TraceFileReader {
 
    public:
     bool Open(const std::string& filename) override;
+    /**
+     * @brief Opens a trace file with specified message type
+     * @param filename Path to the trace file
+     * @param message_type Expected message type in the file
+     * @return true if successful, false otherwise
+     */
     bool Open(const std::string& filename, ReaderTopLevelMessage message_type);
     void Close() override;
     bool HasNext() override;
@@ -39,12 +52,22 @@ class TxthTraceFileReader final : public TraceFileReader {
 
    private:
     std::ifstream trace_file_;
-    MessageParserFunc parser_; /**< Message parsing function */
+    MessageParserFunc parser_;
     std::string line_indicating_msg_start_;
-    ReaderTopLevelMessage message_type_{ReaderTopLevelMessage::kUnknown}; /**< Current message type */
-    // MessageParserFunc parser_;
+    ReaderTopLevelMessage message_type_{ReaderTopLevelMessage::kUnknown};
+    /**
+     * @brief Reads the next complete message from the trace file
+     * @return String containing the complete message in text format
+     */
     std::string ReadNextMessageFromFile();
 
+    /**
+     * @brief Template function to parse text format messages into specific OSI message types
+     * @tparam T The OSI message type to parse into
+     * @param data The text format message data
+     * @return Unique pointer to the parsed protobuf message
+     * @throws std::runtime_error if parsing fails
+     */
     template <typename T>
     std::unique_ptr<google::protobuf::Message> ParseMessage(const std::string& data) {
         auto msg = std::make_unique<T>();
@@ -54,11 +77,21 @@ class TxthTraceFileReader final : public TraceFileReader {
         return std::move(msg);
     }
 
+    /**
+     * @brief Creates a parser function for a specific message type
+     * @tparam T The OSI message type to create a parser for
+     * @return MessageParserFunc that can parse the specified message type
+     */
     template <typename T>
     MessageParserFunc CreateParser() {
         return [this](const std::string& data) { return ParseMessage<T>(data); };
     }
 
+    /**
+     * @brief Map containing message type specific parser functions
+     *
+     * Maps ReaderTopLevelMessage enums to corresponding parser functions for each OSI message type.
+     */
     const std::unordered_map<ReaderTopLevelMessage, MessageParserFunc> kParserMap_ = {{ReaderTopLevelMessage::kGroundTruth, CreateParser<GroundTruth>()},
                                                                                       {ReaderTopLevelMessage::kSensorData, CreateParser<SensorData>()},
                                                                                       {ReaderTopLevelMessage::kSensorView, CreateParser<SensorView>()},
@@ -72,4 +105,4 @@ class TxthTraceFileReader final : public TraceFileReader {
 };
 }  // namespace osi3
 
-#endif  // TXTHTRACEFILEREADER_H
+#endif  // OSIUTILITIES_TRACEFILE_READER_TXTHTRACEFILEREADER_H_

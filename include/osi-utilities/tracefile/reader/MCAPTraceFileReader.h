@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: MPL-2.0
 //
 
-#ifndef OSIUTILITIES_TRACEFILE_READER_MCAPTRACEFILE_READER_H_
-#define OSIUTILITIES_TRACEFILE_READER_MCAPTRACEFILE_READER_H_
+#ifndef OSIUTILITIES_TRACEFILE_READER_MCAPTRACEFILEREADER_H_
+#define OSIUTILITIES_TRACEFILE_READER_MCAPTRACEFILEREADER_H_
 
 #include <mcap/reader.hpp>
 
@@ -22,6 +22,12 @@
 
 namespace osi3 {
 
+/**
+ * @brief Implementation of TraceFileReader for MCAP format files containing OSI messages
+ *
+ * This class provides functionality to read and deserialize OSI messages from MCAP files.
+ * It supports various OSI message types including GroundTruth, SensorData, SensorView, etc.
+ */
 class MCAPTraceFileReader final : public TraceFileReader {
    public:
     bool Open(const std::string& filename) override;
@@ -36,16 +42,30 @@ class MCAPTraceFileReader final : public TraceFileReader {
 
     bool skip_non_osi_msgs_ = false;  // todo add setter
 
+    /**
+     * @brief Template function to deserialize MCAP messages into specific OSI message types
+     * @tparam T The OSI message type to deserialize into
+     * @param mcap_msg The MCAP message containing serialized data
+     * @return Unique pointer to the deserialized OSI protobuf message
+     * @throws std::runtime_error if deserialization fails
+     */
     template <typename T>
-    std::unique_ptr<google::protobuf::Message> Deserialize(const mcap::Message& msg) {
+    std::unique_ptr<google::protobuf::Message> Deserialize(const mcap::Message& mcap_msg) {
         auto output = std::make_unique<T>();
-        if (!output->ParseFromArray(msg.data, msg.dataSize)) {
+        if (!output->ParseFromArray(mcap_msg.data, mcap_msg.dataSize)) {
             throw std::runtime_error("Error: Failed to deserialize message.");
         }
         return output;
     }
 
     using DeserializeFunction = std::function<std::unique_ptr<google::protobuf::Message>(const mcap::Message& msg)>;
+    /**
+     * @brief Map containing message type specific deserializer functions and corresponding OSI message types
+     *
+     * Maps OSI message type strings to pairs of deserializer functions and ReaderTopLevelMessage enums
+     * which are part of the ReadResult struct.Used for dynamic message deserialization
+     * based on channel schema which is defined by the OSI specification.
+     */
     const std::map<std::string, std::pair<DeserializeFunction, ReaderTopLevelMessage>> deserializer_map_ = {
         {"osi3.GroundTruth", {[this](const mcap::Message& msg) { return Deserialize<osi3::GroundTruth>(msg); }, ReaderTopLevelMessage::kGroundTruth}},
         {"osi3.SensorData", {[this](const mcap::Message& msg) { return Deserialize<osi3::SensorData>(msg); }, ReaderTopLevelMessage::kSensorData}},

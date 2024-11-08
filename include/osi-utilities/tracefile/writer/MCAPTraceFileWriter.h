@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: MPL-2.0
 //
 
-#ifndef OSIUTILITIES_TRACEFILE_MCAPWRITER_H_
-#define OSIUTILITIES_TRACEFILE_MCAPWRITER_H
+#ifndef OSIUTILITIES_TRACEFILE_WRITER_MCAPTRACEFILEWRITER_H_
+#define OSIUTILITIES_TRACEFILE_WRITER_MCAPTRACEFILEWRITER_H_
 
 #include <mcap/mcap.hpp>
 
@@ -51,4 +51,4 @@ class MCAPTraceFileWriter final : public osi3::TraceFileWriter {
     void AddCommonMetadata();
 };
 }  // namespace osi3
-#endif  // OSIUTILITIES_TRACEFILE_MCAPWRITER_H_
+#endif  // OSIUTILITIES_TRACEFILE_WRITER_MCAPTRACEFILEWRITER_H_
