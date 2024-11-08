@@ -21,7 +21,7 @@ bool TxthTraceFileReader::Open(const std::string& filename) {
     }
 
     if (message_type_ == ReaderTopLevelMessage::kUnknown) {
-        for (const auto& [key, value] : kMessageTypeMap) {
+        for (const auto& [key, value] : kFileNameMessageTypeMap) {
             if (filename.find(key) != std::string::npos) {
                 message_type_ = value;
                 break;

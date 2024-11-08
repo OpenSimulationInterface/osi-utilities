@@ -7,16 +7,17 @@
 
 #include "osi-utilities/tracefile/reader/NativeBinaryTraceFileReader.h"
 #include "osi-utilities/tracefile/reader/txthTraceFileReader.h"
+#include "osi-utilities/tracefile/reader/MCAPTraceFileReader.h"
 
 std::unique_ptr<osi3::TraceFileReader> createTraceFileReader(const std::string& format) {
     if (format == "mcap") {
-        throw std::invalid_argument("Format not implemented yet");
-        // return std::make_unique<MCAPTraceFileReader>();
-    } else if (format == "osi") {
-        return std::make_unique<osi3::NativeBinaryTraceFileReader>();
-    } else if (format == "txth") {
-        return std::make_unique<osi3::TxthTraceFileReader>();
-    } else {
-        throw std::invalid_argument("Unsupported format: " + format);
+        return std::make_unique<osi3::MCAPTraceFileReader>();
     }
+    if (format == "osi") {
+        return std::make_unique<osi3::NativeBinaryTraceFileReader>();
+    }
+    if (format == "txth") {
+        return std::make_unique<osi3::TxthTraceFileReader>();
+    }
+    throw std::invalid_argument("Unsupported format: " + format);
 }

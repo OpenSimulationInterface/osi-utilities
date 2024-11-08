@@ -14,6 +14,7 @@ endfunction()
 
 # Add examples using the function above
 configure_example(example_mcap_writer example_mcap_writer.cpp)
+configure_example(example_mcap_reader example_mcap_reader.cpp)
 configure_example(example_native_binary_reader example_native_binary_reader.cpp)
 configure_example(example_native_binary_writer example_native_binary_writer.cpp)
 configure_example(example_txth_reader example_txth_reader.cpp)

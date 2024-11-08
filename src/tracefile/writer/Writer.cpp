@@ -15,11 +15,12 @@
 std::unique_ptr<osi3::TraceFileWriter> CreateTraceFileWriter(const std::string& format) {
     if (format == "mcap") {
         return std::make_unique<osi3::MCAPTraceFileWriter>();
-    } else if (format == "osi") {
-        return std::make_unique<osi3::NativeBinaryTraceFileWriter>();
-    } else if (format == "txth") {
-        return std::make_unique<osi3::TxthTraceFileWriter>();
-    } else {
-        throw std::invalid_argument("Unsupported format: " + format);
     }
+    if (format == "osi") {
+        return std::make_unique<osi3::NativeBinaryTraceFileWriter>();
+    }
+    if (format == "txth") {
+        return std::make_unique<osi3::TxthTraceFileWriter>();
+    }
+    throw std::invalid_argument("Unsupported format: " + format);
 }

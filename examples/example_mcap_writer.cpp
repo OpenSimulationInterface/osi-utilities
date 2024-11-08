@@ -7,11 +7,11 @@
 
 #include <filesystem>
 
-#include "osi_sensordata.pb.h"
+#include "osi_sensorview.pb.h"
 #include "osi_version.pb.h"
 
 std::string GenerateTempFilePath() {
-    const auto path = std::filesystem::temp_directory_path() / "example_mcap_writer.mcap";
+    const auto path = std::filesystem::temp_directory_path() / "example_mcap.mcap";
     return path.string();
 }
 
@@ -25,9 +25,9 @@ int main(int argc, const char** argv) {
     tracefile_writer.Open(tracefile_path);
 
     // add a channel to store some data
-    const std::string topic = "Sensor_1_Output";
+    const std::string topic = "Sensor_1_Input";
     const std::unordered_map<std::string, std::string> channel_metadata = {{"description", "This channel contains the output of the sensor 1"}};
-    tracefile_writer.AddChannel(topic, osi3::SensorData::descriptor(), channel_metadata);
+    tracefile_writer.AddChannel(topic, osi3::SensorView::descriptor(), channel_metadata);
 
     // create OSI data to store
     const auto osi_version = osi3::InterfaceVersion::descriptor()->file()->options().GetExtension(osi3::current_interface_version);

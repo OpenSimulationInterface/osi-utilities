@@ -1,4 +1,7 @@
 # osi-utilities
+
+![Build](https://github.com/OpenSimulationInterface/osi-utilities/actions/workflows/ubuntu.yml/badge.svg)
+
 Utility library providing companion tools, helpers and best practices for working with the [Open Simulation Interface (OSI)](https://github.com/OpenSimulationInterface/open-simulation-interface/c) standard.
 
 ## Features

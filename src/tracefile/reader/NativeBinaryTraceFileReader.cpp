@@ -30,7 +30,7 @@ bool NativeBinaryTraceFileReader::Open(const std::string& filename) {
 
     // Determine message type based on filename if not specified in advance
     if (message_type_ == ReaderTopLevelMessage::kUnknown) {
-        for (const auto& [key, value] : kMessageTypeMap) {
+        for (const auto& [key, value] : kFileNameMessageTypeMap) {
             if (filename.find(key) != std::string::npos) {
                 message_type_ = value;
                 break;

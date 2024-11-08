@@ -33,7 +33,7 @@ enum class ReaderTopLevelMessage : u_int8_t {
 /**
  * @brief Map of trace file names to their corresponding message type
  */
-const std::unordered_map<std::string, osi3::ReaderTopLevelMessage> kMessageTypeMap = {{"_gt_", osi3::ReaderTopLevelMessage::kGroundTruth},
+const std::unordered_map<std::string, osi3::ReaderTopLevelMessage> kFileNameMessageTypeMap = {{"_gt_", osi3::ReaderTopLevelMessage::kGroundTruth},
                                                                                       {"_sd_", osi3::ReaderTopLevelMessage::kSensorData},
                                                                                       {"_sv_", osi3::ReaderTopLevelMessage::kSensorView},
                                                                                       {"_svc_", osi3::ReaderTopLevelMessage::kSensorViewConfiguration},
@@ -49,8 +49,8 @@ const std::unordered_map<std::string, osi3::ReaderTopLevelMessage> kMessageTypeM
  */
 struct ReadResult {
     std::unique_ptr<google::protobuf::Message> message;                   /**< The parsed protobuf message */
-    std::string channel;                                                  /**< Channel name (for MCAP format) */
     ReaderTopLevelMessage message_type = ReaderTopLevelMessage::kUnknown; /**< Type of the message */
+    std::string channel_name;                                                  /**< Channel name (only for MCAP format) */
 };
 
 /**
