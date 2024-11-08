@@ -24,12 +24,11 @@ bool MCAPTraceFileReader::Open(const std::string& filename) {
     return true;
 }
 
-
-
-
 std::optional<ReadResult> MCAPTraceFileReader::ReadMessage() {
     // check if ready and if there are messages left
-    if (!this->HasNext()) { return std::nullopt; }
+    if (!this->HasNext()) {
+        return std::nullopt;
+    }
 
     const auto& msg_view = **message_iterator_;
     const auto msg = msg_view.message;
@@ -68,11 +67,7 @@ std::optional<ReadResult> MCAPTraceFileReader::ReadMessage() {
     return result;
 }
 
-
-
-void MCAPTraceFileReader::Close() {
-    mcap_reader_.close();
-}
+void MCAPTraceFileReader::Close() { mcap_reader_.close(); }
 
 bool MCAPTraceFileReader::HasNext() {
     // not opened yet
@@ -86,4 +81,4 @@ bool MCAPTraceFileReader::HasNext() {
     return true;
 }
 
-} // namespace osi3
+}  // namespace osi3

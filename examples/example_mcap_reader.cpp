@@ -40,7 +40,6 @@ int main(int argc, const char** argv) {
 
     // Read messages in a loop until no more messages are available
     while (tracefile_reader.HasNext()) {
-
         const auto reading_result = tracefile_reader.ReadMessage();
         if (!reading_result) {
             std::cerr << "Error reading message." << std::endl;
