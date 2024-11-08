@@ -23,11 +23,8 @@
 
 namespace osi3 {
 
-class MCAPTraceFileReader : public TraceFileReader {
+class MCAPTraceFileReader final : public TraceFileReader {
 public:
-    MCAPTraceFileReader() = default;
-    ~MCAPTraceFileReader() override = default;
-
     bool Open(const std::string& filename) override;
     std::optional<ReadResult> ReadMessage() override;
     void Close() override;
